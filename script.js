@@ -5,6 +5,7 @@ const clickSound = document.getElementById("click-sound");
 let images = [];
 let currentBPM = 60; // Starting BPM
 let stage = 0; // Track metronome stage
+let metronomeTimeout; // Variable to store the metronome timeout
 
 // Background music file
 const bgAudio = new Audio("bg.mp3"); // Use a single background music file
@@ -37,7 +38,12 @@ function playMetronome() {
     clickSound.currentTime = 0;
     clickSound.play();
     const interval = 60000 / currentBPM;
-    setTimeout(playMetronome, interval);
+    
+    // Stop the previous timeout before starting a new one
+    clearTimeout(metronomeTimeout);
+    
+    // Set the next timeout for the metronome
+    metronomeTimeout = setTimeout(playMetronome, interval);
 }
 
 // Function to increase BPM and make the metronome more challenging
@@ -61,10 +67,23 @@ function increaseBPM() {
     setTimeout(increaseBPM, 15000); // Increase BPM every 15 seconds
 }
 
-// Initialize background music and loop it quietly
+// Initialize background music and loop it at 100% volume
 function initBgMusic() {
+    bgAudio.volume = 1.0; // Set volume to 100% (full volume)
     bgAudio.loop = true; // Loop the music indefinitely
     bgAudio.play();
+}
+
+// Pause the metronome for 10 seconds every 30 seconds
+function pauseMetronome() {
+    // Stop the metronome for 10 seconds
+    clearTimeout(metronomeTimeout);
+    
+    // After 10 seconds, resume the metronome
+    setTimeout(playMetronome, 10000);
+    
+    // Call this function every 30 seconds to create the pause
+    setTimeout(pauseMetronome, 30000);
 }
 
 // Initialize everything
@@ -75,6 +94,7 @@ async function init() {
     increaseBPM();
     playMetronome();
     initBgMusic(); // Start the background music quietly and looped
+    pauseMetronome(); // Start the metronome pause functionality
 }
 
 // Security check - Hide overlay if code is correct
