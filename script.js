@@ -67,7 +67,16 @@ async function init() {
     playMetronome();
 }
 
-init();
+// Security check - Hide overlay if code is correct
+function checkCode() {
+    const enteredCode = document.getElementById("security-code").value;
+    const correctCode = "19699";
 
-// Flash the text every time a beat occurs
-setInterval(flashText, 60000 / currentBPM);
+    if (enteredCode === correctCode) {
+        document.getElementById("security-overlay").style.display = "none"; // Hide the overlay
+        init(); // Start the app
+    } else {
+        alert("Incorrect code! Try again."); // Optional, alert on wrong code
+    }
+}
+
