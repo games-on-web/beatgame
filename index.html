@@ -1,17 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Random Image and Beat</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beat Game</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: black;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+
+        #image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        #bpm {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 24px;
+            z-index: 10;
+            transition: color 0.1s;
+        }
+
+        #click-sound {
+            display: none;
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
+
     <img id="image" src="" alt="Random Image">
-    <div id="bpm">BPM: 200</div>
-  </div>
-  <audio id="click-sound" src="click.mp3"></audio>
-  <script src="script.js"></script>
+    <div id="bpm">BPM: 60</div>
+    <audio id="click-sound" src="click.mp3" preload="auto"></audio>
+
+    <script src="script.js"></script>
 </body>
 </html>
