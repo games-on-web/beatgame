@@ -6,6 +6,9 @@ let images = [];
 let currentBPM = 60; // Starting BPM
 let stage = 0; // Track metronome stage
 
+// Background music file
+const bgAudio = new Audio("bg.mp3"); // Use a single background music file
+
 // Fetch the image list from images.json
 async function fetchImageList() {
     const response = await fetch('./images.json');
@@ -58,6 +61,13 @@ function increaseBPM() {
     setTimeout(increaseBPM, 15000); // Increase BPM every 15 seconds
 }
 
+// Initialize background music and loop it quietly
+function initBgMusic() {
+    bgAudio.volume = 0.1; // Set volume to 10% for quiet background music
+    bgAudio.loop = true; // Loop the music indefinitely
+    bgAudio.play();
+}
+
 // Initialize everything
 async function init() {
     await fetchImageList();
@@ -65,6 +75,7 @@ async function init() {
     setInterval(changeImage, 6000); // Change image every 6 seconds
     increaseBPM();
     playMetronome();
+    initBgMusic(); // Start the background music quietly and looped
 }
 
 // Security check - Hide overlay if code is correct
@@ -79,4 +90,3 @@ function checkCode() {
         alert("Incorrect code! Try again."); // Optional, alert on wrong code
     }
 }
-
