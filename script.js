@@ -1,33 +1,54 @@
-body {
-  margin: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background-color: #000;
-  color: #fff;
-  font-family: Arial, sans-serif;
-  overflow: hidden;
+const imageElement = document.getElementById("image");
+const bpmElement = document.getElementById("bpm");
+const clickSound = document.getElementById("click-sound");
+
+let images = [];
+let currentBPM = 200;
+
+// Function to fetch all images in the "images" folder
+async function fetchImages() {
+  const response = await fetch('./images/');
+  const text = await response.text();
+  const parser = new DOMParser();
+  const html = parser.parseFromString(text, 'text/html');
+  const anchors = html.querySelectorAll('a');
+
+  images = Array.from(anchors)
+    .map(a => a.href)
+    .filter(href => href.match(/\.(jpg|jpeg|png|gif|webp)$/i)); // Include WebP images
 }
 
-.container {
-  position: relative;
-  text-align: center;
+// Function to change the displayed image
+function changeImage() {
+  if (images.length > 0) {
+    const randomImage = images[Math.floor(Math.random() * images.length)];
+    imageElement.src = randomImage;
+  }
 }
 
-#image {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: cover;
-  border: 5px solid white;
+// Function to play the click sound at the current BPM
+function playMetronome() {
+  clickSound.currentTime = 0;
+  clickSound.play();
+
+  const interval = 60000 / currentBPM; // Calculate interval in ms
+  setTimeout(playMetronome, interval);
 }
 
-#bpm {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  background-color: rgba(0, 0, 0, 0.7);
-  padding: 10px;
-  border-radius: 5px;
-  font-size: 1.5em;
+// Function to change BPM randomly every 15 seconds
+function changeBPM() {
+  currentBPM = Math.floor(Math.random() * (300 - 100 + 1)) + 100; // Random BPM between 100-300
+  bpmElement.textContent = `BPM: ${currentBPM}`;
+  setTimeout(changeBPM, 15000);
 }
+
+// Initialize everything
+async function init() {
+  await fetchImages();
+  changeImage();
+  setInterval(changeImage, 6000); // Change image every 6 seconds
+  changeBPM();
+  playMetronome();
+}
+
+init();
