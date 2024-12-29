@@ -17,7 +17,8 @@ const messages = [
     "Put on sock!",
     "Put off sock!",
     "Only tip!",
-    "Full strokes!"
+    "Full strokes!",
+    "Eat all left!"
 ];
 
 // Fetch the image list from images.json
