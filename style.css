@@ -34,15 +34,16 @@ body {
 
 #random-message {
     position: fixed;
-    top: 20px; /* Slightly lower from the top */
-    right: 20px; /* Position it on the right */
+    top: 20px; /* Position 20px from the top */
+    right: 20px; /* Align 20px from the right */
     background-color: rgba(0, 0, 0, 0.8);
     color: white;
-    padding: 15px; /* Increased padding for better spacing */
+    padding: 15px;
     border-radius: 5px;
     font-family: Arial, sans-serif;
-    font-size: 18px; /* Increased font size */
-    font-weight: bold; /* Make the text bold */
-    display: none; /* Initially hidden */
+    font-size: 18px;
+    font-weight: bold;
+    display: none; /* Hidden by default */
     z-index: 9999; /* Ensure it stays on top */
+    text-align: right; /* Align text to the right within the box */
 }
