@@ -9,7 +9,7 @@ let images = [];
 let currentBPM = 60;
 let stage = 0;
 let metronomeTimeout;
-
+//
 const bgAudio = new Audio("bg.mp3");
 const messages = [
     "Aim on face!",
