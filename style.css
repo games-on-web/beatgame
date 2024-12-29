@@ -35,7 +35,7 @@ body {
 #random-message {
     position: fixed;
     top: 20px; /* Slightly lower from the top */
-    left: 20px; /* Adjusted further left */
+    right: 20px; /* Position it on the right */
     background-color: rgba(0, 0, 0, 0.8);
     color: white;
     padding: 15px; /* Increased padding for better spacing */
