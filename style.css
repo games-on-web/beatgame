@@ -62,6 +62,21 @@ body {
     z-index: 10000;
 }
 
+#pause-btn {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    font-size: 16px;
+    cursor: pointer;
+    z-index: 10000;
+}
+
 #pause-btn:hover {
     background-color: rgba(50, 50, 50, 0.8);
 }
+
