@@ -34,14 +34,15 @@ body {
 
 #random-message {
     position: fixed;
-    top: 10px;
-    left: 10px;
+    top: 20px; /* Slightly lower from the top */
+    left: 20px; /* Adjusted further left */
     background-color: rgba(0, 0, 0, 0.8);
     color: white;
-    padding: 10px;
+    padding: 15px; /* Increased padding for better spacing */
     border-radius: 5px;
     font-family: Arial, sans-serif;
-    font-size: 14px;
+    font-size: 18px; /* Increased font size */
+    font-weight: bold; /* Make the text bold */
     display: none; /* Initially hidden */
     z-index: 9999; /* Ensure it stays on top */
 }
