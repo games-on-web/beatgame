@@ -46,7 +46,7 @@ function flashText() {
 
 // Play metronome sound
 function playMetronome() {
-    clickSound.volume = 0.35;
+    clickSound.volume = 0.3;
     clickSound.currentTime = 0;
     clickSound.play();
     const interval = 60000 / currentBPM;
