@@ -7,8 +7,8 @@ let images = [];
 let currentBPM = 60;
 let stage = 0;
 let metronomeTimeout;
-//
 const bgAudio = new Audio("bg.mp3");
+
 const messages = [
     "Aim on face!",
     "Aim on thighs!",
@@ -121,6 +121,7 @@ async function init() {
     showRandomMessage(); // Start showing random messages
 }
 
+// Check the code and start the game if correct
 function checkCode() {
     const enteredCode = document.getElementById("security-code").value;
     const correctCode = "19699";  // Example code for checking.
