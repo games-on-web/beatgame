@@ -10,17 +10,17 @@ let metronomeTimeout;
 const bgAudio = new Audio("bg.mp3");
 
 const messages = [
-    "Aim on face!",
-    "Aim on thighs!",
-    "Put on sock!",
-    "Put off sock!",
-    "Only tip!",
-    "Full strokes!",
+    "Aim on face! (if u can)",
+    "Aim on thighs! (if u can)",
+    "Toggle sock! (if hand)",
+    "Only tip! (if u can)",
+    "Full strokes! (if u can)",
     "Eat all left!",
     "Use toy.",
-    "Aim on tummy.",
+    "Aim on tummy. (if u can)",
     "Aim normally up.",
-    "No hands, only mind."
+    "No hands, only mind.",
+    "By hands."
 ];
 
 // Fetch the image list from images.json 
