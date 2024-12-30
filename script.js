@@ -20,7 +20,8 @@ const messages = [
     "Full strokes!",
     "Eat all left!",
     "Use toy.",
-    "Aim on tummmy."
+    "Aim on tummmy.",
+    "No hands, only mind."
 ];
 
 // Fetch the image list from images.json
