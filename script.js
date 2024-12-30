@@ -121,14 +121,13 @@ async function init() {
     showRandomMessage(); // Start showing random messages
 }
 
-// Security check - Hide overlay if code is correct
 function checkCode() {
     const enteredCode = document.getElementById("security-code").value;
-    const correctCode = "19699";
+    const correctCode = "19699";  // Example code for checking.
 
     if (enteredCode === correctCode) {
         document.getElementById("security-overlay").style.display = "none";
-        init();
+        init();  // Call the init() function to start the game
     } else {
         alert("Incorrect code! Try again.");
     }
