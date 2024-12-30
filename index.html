@@ -79,23 +79,6 @@
             transition: color 0.1s;
         }
 
-        #random-message {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: rgba(0, 0, 0, 0.8); /* Black background with opacity */
-            color: white; /* White text */
-            padding: 20px;
-            border-radius: 10px; /* Rounded corners */
-            font-family: Arial, sans-serif;
-            font-size: 18px;
-            font-weight: bold;
-            text-align: center;
-            z-index: 9999; /* Make sure it stays on top of other content */
-            display: none; /* Hidden by default */
-        }
-
         #click-sound {
             display: none;
         }
@@ -116,6 +99,10 @@
     <img id="image" src="" alt="DB DATABASE (v2.7)">
     <div id="bpm">Login</div>
     <audio id="click-sound" src="click.mp3" preload="auto"></audio>
+
+    <div id="random-message" style="display: none; color: white; background-color: black; padding: 10px; border-radius: 5px;">
+    <!-- Random message will appear here -->
+    </div>
 
     <script src="script.js"></script>
 </body>
