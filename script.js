@@ -18,7 +18,9 @@ const messages = [
     "Put off sock!",
     "Only tip!",
     "Full strokes!",
-    "Eat all left!"
+    "Eat all left!",
+    "Use toy.",
+    "Aim on tummmy."
 ];
 
 // Fetch the image list from images.json
@@ -46,7 +48,7 @@ function flashText() {
 
 // Play metronome sound
 function playMetronome() {
-    clickSound.volume = 0.3;
+    clickSound.volume = 0.2;
     clickSound.currentTime = 0;
     clickSound.play();
     const interval = 60000 / currentBPM;
@@ -57,20 +59,29 @@ function playMetronome() {
 // Function to increase BPM and make the metronome more challenging
 function increaseBPM() {
     if (stage === 0) {
-        currentBPM = 60 + Math.floor(Math.random() * 40);
+        currentBPM = 20 + Math.floor(Math.random() * 40); // Stage 0: 20 to 60 BPM
     } else if (stage === 1) {
-        currentBPM = 100 + Math.floor(Math.random() * 50);
+        currentBPM = 60 + Math.floor(Math.random() * 40); // Stage 1: 60 to 100 BPM
     } else if (stage === 2) {
-        currentBPM = 150 + Math.floor(Math.random() * 100);
-    } else {
-        currentBPM = 200 + Math.floor(Math.random() * 100);
+        currentBPM = 100 + Math.floor(Math.random() * 50); // Stage 2: 100 to 150 BPM
+    } else if (stage === 3) {
+        currentBPM = 150 + Math.floor(Math.random() * 60); // Stage 3: 150 to 210 BPM
+    } else if (stage === 4) {
+        currentBPM = 210 + Math.floor(Math.random() * 70); // Stage 4: 210 to 280 BPM
+    } else if (stage === 5) {
+        currentBPM = 280 + Math.floor(Math.random() * 70); // Stage 5: 280 to 350 BPM
     }
+
     bpmElement.textContent = `BPM: ${currentBPM}`;
+    
     stage++;
-    if (stage > 3) {
-        stage = 3;
+    
+    // If we reach the highest stage, keep it there
+    if (stage > 5) {
+        stage = 5;
     }
-    setTimeout(increaseBPM, 15000);
+    
+    setTimeout(increaseBPM, 25000); // Increase BPM every 15 seconds
 }
 
 // Initialize background music and loop it at 100% volume
@@ -102,7 +113,7 @@ function showRandomMessage() {
 async function init() {
     await fetchImageList();
     changeImage();
-    setInterval(changeImage, 6000);
+    setInterval(changeImage, 8000);
     increaseBPM();
     playMetronome();
     initBgMusic();
