@@ -105,8 +105,8 @@ function showRandomMessage() {
     messageElement.style.display = "block";
     setTimeout(() => {
         messageElement.style.display = "none";
-    }, 7000);
-    setTimeout(showRandomMessage, 10000);
+    }, 5000);
+    setTimeout(showRandomMessage, 30000);
 }
 
 // Initialize everything
