@@ -78,7 +78,7 @@ function increaseBPM() {
     
     // If we reach the highest stage, keep it there
     if (stage > 5) {
-        stage = 5;
+        stage = 0;
     }
     
     setTimeout(increaseBPM, 25000); // Increase BPM every 15 seconds
@@ -94,6 +94,7 @@ function initBgMusic() {
 // Pause the metronome for 10 seconds every 30 seconds
 function pauseMetronome() {
     clearTimeout(metronomeTimeout);
+    showRandomMessage();
     setTimeout(playMetronome, 10000);
     setTimeout(pauseMetronome, 30000);
 }
@@ -106,7 +107,6 @@ function showRandomMessage() {
     setTimeout(() => {
         messageElement.style.display = "none";
     }, 5000);
-    setTimeout(showRandomMessage, 30000);
 }
 
 // Initialize everything
@@ -118,7 +118,6 @@ async function init() {
     playMetronome();
     initBgMusic();
     pauseMetronome();
-    showRandomMessage(); // Start showing random messages
 }
 
 function checkCode() {
