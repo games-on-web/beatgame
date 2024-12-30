@@ -22,15 +22,15 @@ const aimList = [
 const withList = [
     "hand full",
     "hand tip",
-    "toy",
-    "nothing"
+    "hand circle"
 ];
 
 const messages = [
     "Eat all left!",
     "Spit on it!",
     "Open wide!",
-    "Toggle sock if u can!"
+    "Toggle sock!",
+    "Toggle panties."
 ];
 
 // Fetch the image list from images.json 
