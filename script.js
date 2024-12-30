@@ -20,14 +20,15 @@ const aimList = [
 ];
 
 const withList = [
-    "hand",
+    "hand full",
+    "hand tip",
     "toy",
     "nothing"
 ];
 
 const messages = [
     "Eat all left!",
-    "Spit o it!",
+    "Spit on it!",
     "Open wide!",
     "Toggle sock if u can!"
 ];
@@ -124,8 +125,7 @@ function updateAimAndWith() {
 async function init() {
     await fetchImageList();
     changeImage();
-    setInterval(changeImage, 8000);
-    setInterval(updateAimAndWith, 8000); // Update every 8 seconds
+    setInterval(changeImage, 9000);
     increaseBPM();
     playMetronome();
     initBgMusic();
