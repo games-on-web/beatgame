@@ -23,7 +23,7 @@ const messages = [
     "No hands, only mind."
 ];
 
-// Fetch the image list from images.json
+// Fetch the image list from images.json 
 async function fetchImageList() {
     const response = await fetch('./images.json');
     const data = await response.json();
