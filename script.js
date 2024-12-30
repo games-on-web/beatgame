@@ -93,8 +93,8 @@ function initBgMusic() {
 // Pause the metronome for 12 seconds every 30 seconds + show message
 function pauseMetronome() {
     clearTimeout(metronomeTimeout);
-    showRandomMessage();
     updateAimAndWith();
+    showRandomMessage();
     setTimeout(playMetronome, 12000);
     setTimeout(pauseMetronome, 30000);
 }
@@ -125,7 +125,7 @@ function updateAimAndWith() {
 async function init() {
     await fetchImageList();
     changeImage();
-    setInterval(changeImage, 9000);
+    setInterval(changeImage, 8000);
     increaseBPM();
     playMetronome();
     initBgMusic();
