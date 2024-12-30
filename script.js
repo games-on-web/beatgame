@@ -20,9 +20,7 @@ const messages = [
     "Use toy.",
     "Aim on tummy.",
     "Aim normally up.",
-    "No hands, only mind.",
-    "Into your mouth.",
-    "Hump it!"
+    "No hands, only mind."
 ];
 
 // Fetch the image list from images.json
@@ -50,7 +48,7 @@ function flashText() {
 
 // Play metronome sound
 function playMetronome() {
-    clickSound.volume = 0.25;
+    clickSound.volume = 0.1;
     clickSound.currentTime = 0;
     clickSound.play();
     const interval = 60000 / currentBPM;
@@ -74,7 +72,7 @@ function increaseBPM() {
         currentBPM = 280 + Math.floor(Math.random() * 70); // Stage 5: 280 to 350 BPM
     }
 
-    bpmElement.textContent = `BPM: ${currentBPM}`;
+    bpmElement.textContent = BPM: ${currentBPM};
     
     stage++;
     
@@ -83,7 +81,7 @@ function increaseBPM() {
         stage = 5;
     }
     
-    setTimeout(increaseBPM, 25000); // Increase BPM every 25 seconds
+    setTimeout(increaseBPM, 25000); // Increase BPM every 15 seconds
 }
 
 // Initialize background music and loop it at 100% volume
@@ -93,34 +91,22 @@ function initBgMusic() {
     bgAudio.play();
 }
 
-// Pause the metronome for 10 seconds every 30 seconds and show a random message
+// Pause the metronome for 10 seconds every 30 seconds
 function pauseMetronome() {
     clearTimeout(metronomeTimeout);
-
-    // Show the random message when the metronome pauses
-    showRandomMessage();
-
-    // Pause the metronome for 10 seconds
-    setTimeout(playMetronome, 10000); // Play metronome after 10 seconds break
-
-    // Re-trigger the pause every 30 seconds
+    setTimeout(playMetronome, 10000);
     setTimeout(pauseMetronome, 30000);
 }
 
 // Show a random message for 7 seconds every 30 seconds
 function showRandomMessage() {
-    if (messageElement) {  // Check if messageElement exists
-        const randomMessage = messages[Math.floor(Math.random() * messages.length)];
-        messageElement.textContent = randomMessage;
-        messageElement.style.display = "block";
-
-        // Hide the message after 7 seconds
-        setTimeout(() => {
-            messageElement.style.display = "none";
-        }, 7000);
-    } else {
-        console.error('Message element not found!');
-    }
+    const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+    messageElement.textContent = randomMessage;
+    messageElement.style.display = "block";
+    setTimeout(() => {
+        messageElement.style.display = "none";
+    }, 7000);
+    setTimeout(showRandomMessage, 10000);
 }
 
 // Initialize everything
@@ -131,7 +117,8 @@ async function init() {
     increaseBPM();
     playMetronome();
     initBgMusic();
-    pauseMetronome(); // Start metronome with pauses and messages
+    pauseMetronome();
+    showRandomMessage(); // Start showing random messages
 }
 
 // Security check - Hide overlay if code is correct
@@ -146,8 +133,3 @@ function checkCode() {
         alert("Incorrect code! Try again.");
     }
 }
-
-// Wait for the DOM to be fully loaded
-document.addEventListener('DOMContentLoaded', () => {
-    checkCode();
-});
