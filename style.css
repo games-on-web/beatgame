@@ -22,12 +22,12 @@ body {
 /* Styling for the top text container */
 #top-texts {
   position: absolute;
-  top: 20px;
+  top: 0px;
   width: 100%;
   display: flex;
   justify-content: center;
   gap: 30px; /* Adds space between the texts */
-  font-size: 1.8em;
+  font-size: 1.5em;
   opacity: 0;
   animation: fadeInText 1s ease-in-out forwards 0.5s; /* Fade in text with delay */
 }
