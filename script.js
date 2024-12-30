@@ -96,7 +96,7 @@ function pauseMetronome() {
     clearTimeout(metronomeTimeout);
     showRandomMessage();
     setTimeout(playMetronome, 10000);
-    setTimeout(pauseMetronome, 30000);
+    setTimeout(pauseMetronome, 10000);
 }
 
 // Show a random message for 7 seconds every 30 seconds
