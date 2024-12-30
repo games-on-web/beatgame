@@ -2,8 +2,6 @@ const imageElement = document.getElementById("image");
 const bpmElement = document.getElementById("bpm");
 const clickSound = document.getElementById("click-sound");
 const messageElement = document.getElementById("random-message");
-messageElement.id = "random-message";
-document.body.appendChild(messageElement);
 
 let images = [];
 let currentBPM = 60;
