@@ -83,7 +83,7 @@ function increaseBPM() {
         stage = 5;
     }
     
-    setTimeout(increaseBPM, 25000); // Increase BPM every 15 seconds
+    setTimeout(increaseBPM, 25000); // Increase BPM every 25 seconds
 }
 
 // Initialize background music and loop it at 100% volume
@@ -109,14 +109,18 @@ function pauseMetronome() {
 
 // Show a random message for 7 seconds every 30 seconds
 function showRandomMessage() {
-    const randomMessage = messages[Math.floor(Math.random() * messages.length)];
-    messageElement.textContent = randomMessage;
-    messageElement.style.display = "block";
+    if (messageElement) {  // Check if messageElement exists
+        const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+        messageElement.textContent = randomMessage;
+        messageElement.style.display = "block";
 
-    // Hide the message after 7 seconds
-    setTimeout(() => {
-        messageElement.style.display = "none";
-    }, 7000);
+        // Hide the message after 7 seconds
+        setTimeout(() => {
+            messageElement.style.display = "none";
+        }, 7000);
+    } else {
+        console.error('Message element not found!');
+    }
 }
 
 // Initialize everything
@@ -142,3 +146,8 @@ function checkCode() {
         alert("Incorrect code! Try again.");
     }
 }
+
+// Wait for the DOM to be fully loaded
+document.addEventListener('DOMContentLoaded', () => {
+    checkCode();
+});
