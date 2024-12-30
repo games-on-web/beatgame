@@ -101,7 +101,7 @@ function pauseMetronome() {
 // Show a random message for 7 seconds every 30 seconds
 function showRandomMessage() {
     const randomMessage = messages[Math.floor(Math.random() * messages.length)];
-    messageElement.textContent = randomMessage;
+    messageElement.text = randomMessage;
     messageElement.style.display = "block";
     setTimeout(() => {
         messageElement.style.display = "none";
