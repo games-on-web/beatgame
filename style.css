@@ -11,7 +11,7 @@ body {
   overflow: hidden;
 }
 
-/* Fullscreen overlay for security prompt */
+/* Fullscreen overlay for security prompt. */
 #security-overlay {
   position: fixed;
   top: 0;
