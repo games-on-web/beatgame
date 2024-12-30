@@ -72,7 +72,7 @@ function increaseBPM() {
         currentBPM = 280 + Math.floor(Math.random() * 70); // Stage 5: 280 to 350 BPM
     }
 
-    bpmElement.textContent = BPM: ${currentBPM};
+    bpmElement.textContent = `BPM: ${currentBPM}`;
     
     stage++;
     
@@ -101,7 +101,7 @@ function pauseMetronome() {
 // Show a random message for 7 seconds every 30 seconds
 function showRandomMessage() {
     const randomMessage = messages[Math.floor(Math.random() * messages.length)];
-    messageElement.text = randomMessage;
+    messageElement.textContent = randomMessage;
     messageElement.style.display = "block";
     setTimeout(() => {
         messageElement.style.display = "none";
