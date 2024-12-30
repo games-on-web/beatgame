@@ -81,12 +81,14 @@ body {
 /* Styling for the BPM text with transparent background */
 #bpm {
   position: absolute;
-  top: 20px;
-  left: 20px;
+  top: 20px; /* Distance from the top */
+  left: 20px; /* Distance from the left */
   background-color: rgba(0, 0, 0, 0.5); /* 50% transparency background */
   padding: 10px;
   border-radius: 5px;
   font-size: 1.5em;
+  color: white; /* Ensures text color is white */
+  z-index: 10; /* Ensures it is above the image */
 }
 
 /* Styling for the random message */
