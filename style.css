@@ -63,22 +63,27 @@ body {
 .container {
   position: relative;
   text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
 
 /* Styling for the image */
 #image {
   max-width: 100%;
   max-height: 100%;
-  object-fit: cover;
+  object-fit: contain; /* Ensures the image scales while maintaining aspect ratio */
   border: 5px solid white;
+  transition: all 0.3s ease; /* Smooth transition for size change */
 }
 
-/* Styling for the BPM text */
+/* Styling for the BPM text with transparent background */
 #bpm {
   position: absolute;
-  top: 10px;
-  left: 10px;
-  background-color: rgba(0, 0, 0, 0);
+  top: 20px;
+  left: 20px;
+  background-color: rgba(0, 0, 0, 0.5); /* 50% transparency background */
   padding: 10px;
   border-radius: 5px;
   font-size: 1.5em;
@@ -87,18 +92,19 @@ body {
 /* Styling for the random message */
 #random-message {
   position: fixed;
-  top: 20px; /* Position 20px from the top */
-  right: 20px; /* Align 20px from the right */
-  background-color: rgba(0, 0, 0, 0.8);
+  top: 50%; /* Center the message vertically */
+  left: 50%; /* Center the message horizontally */
+  transform: translate(-50%, -50%); /* Adjust for exact center */
+  background-color: rgba(0, 0, 0, 0.5); /* 50% transparency */
   color: white;
-  padding: 15px;
-  border-radius: 5px;
+  padding: 20px;
+  border-radius: 10px;
   font-family: Arial, sans-serif;
   font-size: 18px;
   font-weight: bold;
   display: none; /* Hidden by default */
   z-index: 9999; /* Ensure it stays on top */
-  text-align: right; /* Align text to the right within the box */
-  width: auto; /* Allow width to auto-adjust based on content */
-  max-width: 300px; /* Optional: limit the width if needed */
+  text-align: center; /* Center the text inside the box */
+  max-width: 80%; /* Limit the width for better responsiveness */
+  word-wrap: break-word; /* Handle long text properly */
 }
