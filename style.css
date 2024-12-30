@@ -1,3 +1,4 @@
+/* Global body styles */
 body {
   margin: 0;
   display: flex;
@@ -10,11 +11,61 @@ body {
   overflow: hidden;
 }
 
+/* Fullscreen overlay for security prompt */
+#security-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+/* Styling for the security box */
+#security-box {
+  background-color: #222;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  color: white;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+/* Styling for the input and button in the security box */
+#security-box input {
+  padding: 10px;
+  width: 200px;
+  margin: 10px 0;
+  border: 1px solid #555;
+  background-color: #333;
+  color: white;
+}
+
+#security-box button {
+  padding: 10px 20px;
+  background-color: #444;
+  border: none;
+  color: white;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+#security-box button:hover {
+  background-color: #555;
+}
+
+/* Container for the image */
 .container {
   position: relative;
   text-align: center;
 }
 
+/* Styling for the image */
 #image {
   max-width: 100%;
   max-height: 100%;
@@ -22,6 +73,7 @@ body {
   border: 5px solid white;
 }
 
+/* Styling for the BPM text */
 #bpm {
   position: absolute;
   top: 10px;
@@ -32,20 +84,21 @@ body {
   font-size: 1.5em;
 }
 
+/* Styling for the random message */
 #random-message {
-    position: fixed;
-    top: 20px; /* Position 20px from the top */
-    right: 20px; /* Align 20px from the right */
-    background-color: rgba(0, 0, 0, 0.8);
-    color: white;
-    padding: 15px;
-    border-radius: 5px;
-    font-family: Arial, sans-serif;
-    font-size: 18px;
-    font-weight: bold;
-    display: none; /* Hidden by default */
-    z-index: 9999; /* Ensure it stays on top */
-    text-align: right; /* Align text to the right within the box */
-    width: auto; /* Allow width to auto-adjust based on content */
-    max-width: 300px; /* Optional: limit the width if needed */
+  position: fixed;
+  top: 20px; /* Position 20px from the top */
+  right: 20px; /* Align 20px from the right */
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 15px;
+  border-radius: 5px;
+  font-family: Arial, sans-serif;
+  font-size: 18px;
+  font-weight: bold;
+  display: none; /* Hidden by default */
+  z-index: 9999; /* Ensure it stays on top */
+  text-align: right; /* Align text to the right within the box */
+  width: auto; /* Allow width to auto-adjust based on content */
+  max-width: 300px; /* Optional: limit the width if needed */
 }
