@@ -7,16 +7,57 @@ body {
   height: 100vh;
   background-color: #000;
   color: #fff;
-  font-family: Arial, sans-serif;
+  font-family: 'Arial', sans-serif;
   overflow: hidden;
-  animation: fadeIn 1s ease-in-out;
+  animation: fadeInBody 2s ease-in-out; /* Fading in body */
 }
 
 /* Styling for the container of the content */
 .container {
   position: relative;
   text-align: center;
-  animation: scaleUp 1s ease-in-out;
+  animation: scaleUpContainer 1.5s ease-out; /* Scaling up the content */
+}
+
+/* Styling for the top text container */
+#top-texts {
+  position: absolute;
+  top: 20px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 30px; /* Adds space between the texts */
+  font-size: 1.8em;
+  opacity: 0;
+  animation: fadeInText 1s ease-in-out forwards 0.5s; /* Fade in text with delay */
+}
+
+/* Styling for Aim text */
+#aim-text {
+  color: #ffcc00;
+  font-weight: bold;
+  text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.6);
+  transition: transform 0.3s ease; /* Add hover effect */
+}
+
+/* Hover effect for Aim text */
+#aim-text:hover {
+  transform: scale(1.1);
+  color: #f8e71c;
+}
+
+/* Styling for With text */
+#with-text {
+  color: #66ff66;
+  font-weight: bold;
+  text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.6);
+  transition: transform 0.3s ease; /* Add hover effect */
+}
+
+/* Hover effect for With text */
+#with-text:hover {
+  transform: scale(1.1);
+  color: #00cc66;
 }
 
 /* Styling for the image */
@@ -25,19 +66,29 @@ body {
   max-height: 100%;
   object-fit: contain; /* Ensures image maintains aspect ratio */
   border: 5px solid white;
-  animation: fadeInImage 1s ease-in-out;
+  opacity: 0;
+  animation: fadeInImage 2s ease-in-out forwards 1s; /* Fading in image */
+  transform: scale(0.9);
+  transition: transform 0.3s ease;
 }
 
-/* Styling for the BPM text with transparent background */
+/* Hover effect for image */
+#image:hover {
+  transform: scale(1);
+}
+
+/* Styling for the BPM text */
 #bpm {
   position: absolute;
   top: 20px;
   left: 20px;
-  background-color: rgba(0, 0, 0, 0.5); /* 50% transparency background */
+  background-color: rgba(0, 0, 0, 0.6);
   padding: 10px;
   border-radius: 5px;
   font-size: 1.5em;
-  animation: fadeInBPM 1s ease-in-out;
+  opacity: 0;
+  animation: fadeInBPM 1.5s ease-in-out forwards 1s; /* Fade-in BPM */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
 }
 
 /* Styling for the random message with background and centered on screen */
@@ -46,48 +97,56 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: rgba(0, 0, 0, 0.5); /* 50% transparency */
+  background-color: rgba(0, 0, 0, 0.8);
   color: white;
   padding: 20px;
   border-radius: 10px;
-  font-family: Arial, sans-serif;
-  font-size: 18px;
+  font-family: 'Arial', sans-serif;
+  font-size: 1.5em;
   font-weight: bold;
   display: none; /* Hidden by default */
   z-index: 9999;
   text-align: center;
-  max-width: 80%; /* Prevents the message from being too wide */
-  word-wrap: break-word; /* Ensures long messages break onto the next line */
-  animation: fadeInMessage 1s ease-in-out;
+  max-width: 80%;
+  word-wrap: break-word;
+  animation: fadeInMessage 1.5s ease-in-out; /* Fade in random message */
+  opacity: 0;
+  transition: opacity 1s ease-out;
 }
 
-/* Keyframe animations */
+/* Keyframe Animations */
 
-/* Animation for fading in body */
-@keyframes fadeIn {
+/* Fade in the body */
+@keyframes fadeInBody {
   0% { opacity: 0; }
   100% { opacity: 1; }
 }
 
-/* Animation for scaling the container */
-@keyframes scaleUp {
-  0% { transform: scale(0.5); opacity: 0; }
+/* Scale-up the container */
+@keyframes scaleUpContainer {
+  0% { transform: scale(0.7); opacity: 0; }
   100% { transform: scale(1); opacity: 1; }
 }
 
-/* Animation for fading in image */
-@keyframes fadeInImage {
+/* Fade-in top texts */
+@keyframes fadeInText {
   0% { opacity: 0; }
   100% { opacity: 1; }
 }
 
-/* Animation for fading in BPM text */
+/* Fade-in image */
+@keyframes fadeInImage {
+  0% { opacity: 0; transform: scale(0.9); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+/* Fade-in BPM text */
 @keyframes fadeInBPM {
   0% { opacity: 0; }
   100% { opacity: 1; }
 }
 
-/* Animation for fading in random message */
+/* Fade-in random message */
 @keyframes fadeInMessage {
   0% { opacity: 0; }
   100% { opacity: 1; }
@@ -102,4 +161,10 @@ body {
 #random-message.fade-in {
   opacity: 1;
   transition: opacity 1s ease-in;
+}
+
+/* Optional: Adding some cool animations for hover on image */
+#image:hover {
+  transform: scale(1.05) rotate(2deg);
+  transition: transform 0.3s ease-out;
 }
