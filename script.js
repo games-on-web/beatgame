@@ -91,10 +91,17 @@ function initBgMusic() {
     bgAudio.play();
 }
 
-// Pause the metronome for 10 seconds every 30 seconds
+// Pause the metronome for 10 seconds every 30 seconds and show a random message
 function pauseMetronome() {
     clearTimeout(metronomeTimeout);
-    setTimeout(playMetronome, 10000);
+
+    // Show the random message when the metronome pauses
+    showRandomMessage();
+
+    // Pause the metronome for 10 seconds
+    setTimeout(playMetronome, 10000); // Play metronome after 10 seconds break
+
+    // Re-trigger the pause every 30 seconds
     setTimeout(pauseMetronome, 30000);
 }
 
@@ -103,10 +110,11 @@ function showRandomMessage() {
     const randomMessage = messages[Math.floor(Math.random() * messages.length)];
     messageElement.textContent = randomMessage;
     messageElement.style.display = "block";
+
+    // Hide the message after 7 seconds
     setTimeout(() => {
         messageElement.style.display = "none";
     }, 7000);
-    setTimeout(showRandomMessage, 10000);
 }
 
 // Initialize everything
@@ -117,8 +125,7 @@ async function init() {
     increaseBPM();
     playMetronome();
     initBgMusic();
-    pauseMetronome();
-    showRandomMessage(); // Start showing random messages
+    pauseMetronome(); // Start metronome with pauses and messages
 }
 
 // Security check - Hide overlay if code is correct
