@@ -77,20 +77,6 @@ body {
   transform: scale(1);
 }
 
-/* Styling for the BPM text */
-#bpm {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  background-color: rgba(0, 0, 0, 0.6);
-  padding: 10px;
-  border-radius: 5px;
-  font-size: 1.5em;
-  opacity: 0;
-  animation: fadeInBPM 1.5s ease-in-out forwards 1s; /* Fade-in BPM */
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
-}
-
 /* Styling for the random message with background and centered on screen */
 #random-message {
   position: fixed;
