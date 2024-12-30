@@ -49,7 +49,7 @@ function flashText() {
 
 // Play metronome sound
 function playMetronome() {
-    clickSound.volume = 0.2;
+    clickSound.volume = 0.1;
     clickSound.currentTime = 0;
     clickSound.play();
     const interval = 60000 / currentBPM;
@@ -107,7 +107,7 @@ function showRandomMessage() {
     setTimeout(() => {
         messageElement.style.display = "none";
     }, 7000);
-    setTimeout(showRandomMessage, 30000);
+    setTimeout(showRandomMessage, 10000);
 }
 
 // Initialize everything
