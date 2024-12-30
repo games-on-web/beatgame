@@ -95,8 +95,8 @@ function initBgMusic() {
 function pauseMetronome() {
     clearTimeout(metronomeTimeout);
     showRandomMessage();
-    setTimeout(playMetronome, 5000);
-    setTimeout(pauseMetronome, 15000);
+    setTimeout(playMetronome, 12000);
+    setTimeout(pauseMetronome, 30000);
 }
 
 // Show a random message for 7 seconds every 30 seconds
