@@ -18,7 +18,8 @@ const messages = [
     "Full strokes!",
     "Eat all left!",
     "Use toy.",
-    "Aim on tummmy.",
+    "Aim on tummy.",
+    "Aim normally up.",
     "No hands, only mind."
 ];
 
