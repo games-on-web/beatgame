@@ -1,13 +1,38 @@
 const imageElement = document.getElementById("image");
-const bpmElement = document.getElementById("bpm");
 const clickSound = document.getElementById("click-sound");
 const messageElement = document.getElementById("random-message");
+const aimTextElement = document.getElementById("aim-text");
+const withTextElement = document.getElementById("with-text");
 
 let images = [];
 let currentBPM = 60;
 let stage = 0;
 let metronomeTimeout;
 const bgAudio = new Audio("bg.mp3");
+
+const aimList = [
+    "face",
+    "thighs",
+    "tummy",
+    "legs",
+    "feet",
+    "back",
+    "chest",
+    "head",
+    "arms",
+    "neck"
+];
+
+const withList = [
+    "hand",
+    "toy",
+    "mind",
+    "no hands",
+    "feet",
+    "mouth",
+    "fingers",
+    "eyes"
+];
 
 const messages = [
     "Aim on face! (if u can)",
@@ -37,15 +62,6 @@ function changeImage() {
         imageElement.src = randomImage;
     }
 }
-
-// Flash the BPM text on every beat
-function flashText() {
-    bpmElement.style.color = "red";
-    setTimeout(() => {
-        bpmElement.style.color = "white";
-    }, 100);
-}
-
 // Play metronome sound
 function playMetronome() {
     clickSound.volume = 0.1;
@@ -71,27 +87,25 @@ function increaseBPM() {
     } else if (stage === 5) {
         currentBPM = 280 + Math.floor(Math.random() * 70); // Stage 5: 280 to 350 BPM
     }
-
-    bpmElement.textContent = `BPM: ${currentBPM}`;
     
     stage++;
     
-    // If we reach the highest stage, keep it there
+    // If we reach the highest stage, go to mid stage
     if (stage > 5) {
-        stage = 0;
+        stage = 3;
     }
     
-    setTimeout(increaseBPM, 25000); // Increase BPM every 15 seconds
+    setTimeout(increaseBPM, 25000); // Increase BPM every 25s
 }
 
-// Initialize background music and loop it at 100% volume
+// Initialize background music
 function initBgMusic() {
     bgAudio.volume = 0.5;
     bgAudio.loop = true;
     bgAudio.play();
 }
 
-// Pause the metronome for 10 seconds every 30 seconds
+// Pause the metronome for 12 seconds every 30 seconds + show message
 function pauseMetronome() {
     clearTimeout(metronomeTimeout);
     showRandomMessage();
@@ -99,7 +113,7 @@ function pauseMetronome() {
     setTimeout(pauseMetronome, 30000);
 }
 
-// Show a random message for 7 seconds every 30 seconds
+// Show a random message for 5 seconds
 function showRandomMessage() {
     const randomMessage = messages[Math.floor(Math.random() * messages.length)];
     messageElement.textContent = randomMessage;
@@ -109,11 +123,22 @@ function showRandomMessage() {
     }, 5000);
 }
 
+// Update the "Aim" and "With" texts
+function updateAimAndWith() {
+    const randomAim = aimList[Math.floor(Math.random() * aimList.length)];
+    const randomWith = withList[Math.floor(Math.random() * withList.length)];
+
+    aimTextElement.textContent = `Aim: ${randomAim}`;
+    withTextElement.textContent = `With: ${randomWith}`;
+}
+
 // Initialize everything
 async function init() {
     await fetchImageList();
     changeImage();
     setInterval(changeImage, 8000);
+    updateAimAndWith(); // Update the "Aim" and "With" texts on start
+    setInterval(updateAimAndWith, 8000); // Update every 8 seconds
     increaseBPM();
     playMetronome();
     initBgMusic();
