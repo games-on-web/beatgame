@@ -14,38 +14,22 @@ const aimList = [
     "face",
     "thighs",
     "tummy",
-    "legs",
-    "feet",
-    "back",
-    "chest",
-    "head",
-    "arms",
-    "neck"
+    "neck",
+    "mouth",
+    "up"
 ];
 
 const withList = [
     "hand",
     "toy",
-    "mind",
-    "no hands",
-    "feet",
-    "mouth",
-    "fingers",
-    "eyes"
+    "nothing"
 ];
 
 const messages = [
-    "Aim on face! (if u can)",
-    "Aim on thighs! (if u can)",
-    "Toggle sock! (if hand)",
-    "Only tip! (if u can)",
-    "Full strokes! (if u can)",
     "Eat all left!",
-    "Use toy.",
-    "Aim on tummy. (if u can)",
-    "Aim normally up.",
-    "No hands, only mind.",
-    "By hands."
+    "Spit o it!",
+    "Open wide!",
+    "Toggle sock if u can!"
 ];
 
 // Fetch the image list from images.json 
@@ -109,18 +93,22 @@ function initBgMusic() {
 function pauseMetronome() {
     clearTimeout(metronomeTimeout);
     showRandomMessage();
+    updateAimAndWith();
     setTimeout(playMetronome, 12000);
     setTimeout(pauseMetronome, 30000);
 }
 
-// Show a random message for 5 seconds
+// Show a random message for a longer duration with wait
 function showRandomMessage() {
     const randomMessage = messages[Math.floor(Math.random() * messages.length)];
     messageElement.textContent = randomMessage;
     messageElement.style.display = "block";
+
+    const messageDuration = 8000;  // Message will be shown for 8 seconds
+
     setTimeout(() => {
-        messageElement.style.display = "none";
-    }, 5000);
+        messageElement.style.display = "none"; // Hide the message
+    }, messageDuration);
 }
 
 // Update the "Aim" and "With" texts
@@ -137,7 +125,6 @@ async function init() {
     await fetchImageList();
     changeImage();
     setInterval(changeImage, 8000);
-    updateAimAndWith(); // Update the "Aim" and "With" texts on start
     setInterval(updateAimAndWith, 8000); // Update every 8 seconds
     increaseBPM();
     playMetronome();
