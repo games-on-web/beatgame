@@ -87,7 +87,7 @@ function increaseBPM() {
 
 // Initialize background music and loop it at 100% volume
 function initBgMusic() {
-    bgAudio.volume = 1.0;
+    bgAudio.volume = 0.5;
     bgAudio.loop = true;
     bgAudio.play();
 }
