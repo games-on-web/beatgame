@@ -46,37 +46,6 @@ body {
     display: none; /* Hidden by default */
     z-index: 9999; /* Ensure it stays on top */
     text-align: right; /* Align text to the right within the box */
+    width: auto; /* Allow width to auto-adjust based on content */
+    max-width: 300px; /* Optional: limit the width if needed */
 }
-
-#pause-btn {
-    position: fixed;
-    bottom: 20px;
-    left: 20px;
-    background-color: rgba(0, 0, 0, 0.8);
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 15px;
-    font-size: 16px;
-    cursor: pointer;
-    z-index: 10000;
-}
-
-#pause-btn {
-    position: fixed;
-    bottom: 20px;
-    left: 20px;
-    background-color: rgba(0, 0, 0, 0.8);
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 15px;
-    font-size: 16px;
-    cursor: pointer;
-    z-index: 10000;
-}
-
-#pause-btn:hover {
-    background-color: rgba(50, 50, 50, 0.8);
-}
-
