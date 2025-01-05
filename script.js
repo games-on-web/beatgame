@@ -10,27 +10,11 @@ let stage = 0;
 let metronomeTimeout;
 const bgAudio = new Audio("bg.mp3");
 
-const aimList = [
-    "face",
-    "thighs",
-    "tummy",
-    "neck",
-    "mouth",
-    "up"
-];
-
-const withList = [
-    "hand full",
-    "hand tip",
-    "hand circle"
-];
-
 const messages = [
     "Eat all left!",
     "Spit on it!",
-    "Open wide!",
     "Toggle sock!",
-    "Toggle panties."
+    "Aim on face!",
 ];
 
 // Fetch the image list from images.json 
@@ -57,7 +41,7 @@ function playMetronome() {
 
     // Vibrate the phone on each beat (100ms vibration)
     if ("vibrate" in navigator) {
-        navigator.vibrate(100); // Vibrate for 100 milliseconds
+        navigator.vibrate(150); // Vibrate for 100 milliseconds
     }
 
     // Set the interval based on the current BPM
@@ -82,13 +66,15 @@ function increaseBPM() {
         currentBPM = 210 + Math.floor(Math.random() * 70); // Stage 4: 210 to 280 BPM
     } else if (stage === 5) {
         currentBPM = 280 + Math.floor(Math.random() * 70); // Stage 5: 280 to 350 BPM
+    } else if (stage === 6) {
+        currentBPM = 350 + Math.floor(Math.random() * 80); // Stage 6: TURBO
     }
     
     stage++;
     
     // If we reach the highest stage, go to mid stage
-    if (stage > 5) {
-        stage = 3;
+    if (stage > 6) {
+        stage = 4;
     }
     
     setTimeout(increaseBPM, 25000); // Increase BPM every 25s
