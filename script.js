@@ -42,12 +42,14 @@ function playMetronome() {
     clickSound.currentTime = 0;
     clickSound.play();
 
-    // Vibrate the phone on each beat (100ms vibration)
-    setTimeout(() => {
-        if ("vibrate" in navigator) {
-            navigator.vibrate(150); // Vibrate for 100 milliseconds
-        }
-    }, 200);
+    // Check if the vibrate checkbox is checked
+    if (document.getElementById("vibrate-checkbox").checked) {
+        setTimeout(() => {
+            if ("vibrate" in navigator) {
+                navigator.vibrate(150); // Vibrate for 150 milliseconds
+            }
+        }, 200); // Small delay for best sound alignment
+    }
 
     // Set the interval based on the current BPM
     const interval = 60000 / currentBPM;
@@ -87,9 +89,14 @@ function increaseBPM() {
 
 // Initialize background music
 function initBgMusic() {
-    bgAudio.volume = 0.5;
-    bgAudio.loop = true;
-    bgAudio.play();
+    // Check if the background music checkbox is checked
+    if (document.getElementById("background-checkbox").checked) {
+        bgAudio.volume = 0.5;
+        bgAudio.loop = true;
+        bgAudio.play();
+    } else {
+        bgAudio.pause(); // Pause background music if not checked
+    }
 }
 
 // Pause the metronome for 15 seconds every 50 seconds + show message
@@ -124,6 +131,7 @@ async function init() {
     pauseMetronome();
 }
 
+// Code validation function for security
 function checkCode() {
     const enteredCode = document.getElementById("security-code").value;
     const correctCode = " 19699";  // Example code for checking.
@@ -135,3 +143,7 @@ function checkCode() {
         alert("Incorrect code! Try again.");
     }
 }
+
+// Add event listeners to checkboxes to start/stop background music and vibration
+document.getElementById("background-checkbox").addEventListener('change', initBgMusic);
+document.getElementById("vibrate-checkbox").addEventListener('change', playMetronome);
