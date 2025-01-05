@@ -47,12 +47,23 @@ function changeImage() {
         imageElement.src = randomImage;
     }
 }
-// Play metronome sound
+
+// Play metronome sound and vibrate on each beat
 function playMetronome() {
+    // Play the metronome sound
     clickSound.volume = 0.1;
     clickSound.currentTime = 0;
     clickSound.play();
+
+    // Vibrate the phone on each beat (100ms vibration)
+    if ("vibrate" in navigator) {
+        navigator.vibrate(100); // Vibrate for 100 milliseconds
+    }
+
+    // Set the interval based on the current BPM
     const interval = 60000 / currentBPM;
+    
+    // Clear previous timeout and set the next beat
     clearTimeout(metronomeTimeout);
     metronomeTimeout = setTimeout(playMetronome, interval);
 }
@@ -90,13 +101,13 @@ function initBgMusic() {
     bgAudio.play();
 }
 
-// Pause the metronome for 12 seconds every 30 seconds + show message
+// Pause the metronome for 15 seconds every 50 seconds + show message
 function pauseMetronome() {
     clearTimeout(metronomeTimeout);
     updateAimAndWith();
     showRandomMessage();
-    setTimeout(playMetronome, 12000);
-    setTimeout(pauseMetronome, 30000);
+    setTimeout(playMetronome, 15000); // Resume the metronome after 15 seconds
+    setTimeout(pauseMetronome, 50000); // Pause the metronome again after 50 seconds
 }
 
 // Show a random message for a longer duration with wait
@@ -134,7 +145,7 @@ async function init() {
 
 function checkCode() {
     const enteredCode = document.getElementById("security-code").value;
-    const correctCode = "19699";  // Example code for checking.
+    const correctCode = " 19699";  // Example code for checking.
 
     if (enteredCode === correctCode) {
         document.getElementById("security-overlay").style.display = "none";
