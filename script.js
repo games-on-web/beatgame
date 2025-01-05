@@ -4,6 +4,9 @@ const messageElement = document.getElementById("random-message");
 const aimTextElement = document.getElementById("aim-text");
 const withTextElement = document.getElementById("with-text");
 
+aimTextElement.style.display = "none";
+withTextElement.style.display = "none";
+
 let images = [];
 let currentBPM = 60;
 let stage = 0;
@@ -40,9 +43,11 @@ function playMetronome() {
     clickSound.play();
 
     // Vibrate the phone on each beat (100ms vibration)
-    if ("vibrate" in navigator) {
-        navigator.vibrate(150); // Vibrate for 100 milliseconds
-    }
+    setTimeout(() => {
+        if ("vibrate" in navigator) {
+            navigator.vibrate(150); // Vibrate for 100 milliseconds
+        }
+    }, 200);
 
     // Set the interval based on the current BPM
     const interval = 60000 / currentBPM;
@@ -90,7 +95,6 @@ function initBgMusic() {
 // Pause the metronome for 15 seconds every 50 seconds + show message
 function pauseMetronome() {
     clearTimeout(metronomeTimeout);
-    updateAimAndWith();
     showRandomMessage();
     setTimeout(playMetronome, 15000); // Resume the metronome after 15 seconds
     setTimeout(pauseMetronome, 50000); // Pause the metronome again after 50 seconds
@@ -107,15 +111,6 @@ function showRandomMessage() {
     setTimeout(() => {
         messageElement.style.display = "none"; // Hide the message
     }, messageDuration);
-}
-
-// Update the "Aim" and "With" texts
-function updateAimAndWith() {
-    const randomAim = aimList[Math.floor(Math.random() * aimList.length)];
-    const randomWith = withList[Math.floor(Math.random() * withList.length)];
-
-    aimTextElement.textContent = `Aim: ${randomAim}`;
-    withTextElement.textContent = `With: ${randomWith}`;
 }
 
 // Initialize everything
