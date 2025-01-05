@@ -154,3 +154,28 @@ body {
   transform: scale(1.05) rotate(2deg);
   transition: transform 0.3s ease-out;
 }
+
+/* Position the checkbox container at the bottom */
+#checkbox-container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #fff; /* Optional: Background color for visibility */
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  gap: 15px; /* Space between checkboxes */
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Styling for the checkboxes and labels */
+#checkbox-container label {
+  font-size: 16px;
+  color: #000;
+}
+
+/* Ensure the checkbox container doesn't overlap with the content */
+body {
+  padding-bottom: 50px; /* Adjust as needed to avoid overlap */
+}
