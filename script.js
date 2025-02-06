@@ -15,9 +15,7 @@ const bgAudio = new Audio("bg.mp3");
 
 const messages = [
     "Eat all left!",
-    "Spit on it!",
-    "Toggle sock!",
-    "Aim on face!",
+    "Spit on it!"
 ];
 
 // Fetch the image list from images.json 
@@ -46,7 +44,7 @@ function playMetronome() {
     if (document.getElementById("vibrate-checkbox").checked) {
         setTimeout(() => {
             if ("vibrate" in navigator) {
-                navigator.vibrate(150); // Vibrate for 150 milliseconds
+                navigator.vibrate(300); // Vibrate for 300 milliseconds
             }
         }, 200); // Small delay for best sound alignment
     }
@@ -81,7 +79,7 @@ function increaseBPM() {
     
     // If we reach the highest stage, go to mid stage
     if (stage > 6) {
-        stage = 4;
+        stage = 3;
     }
     
     setTimeout(increaseBPM, 25000); // Increase BPM every 25s
@@ -103,7 +101,7 @@ function initBgMusic() {
 function pauseMetronome() {
     clearTimeout(metronomeTimeout);
     showRandomMessage();
-    setTimeout(playMetronome, 15000); // Resume the metronome after 15 seconds
+    setTimeout(playMetronome, 20000); // Resume the metronome after 15 seconds
     setTimeout(pauseMetronome, 50000); // Pause the metronome again after 50 seconds
 }
 
