@@ -87,8 +87,8 @@ function initBgMusic() {
 
 // Function to stop the metronome, slow it down, and alert after 20 seconds
 function finished() {
-    // Slow down the BPM to 150
-    currentBPM = 150;
+    // Slow down the BPM to 220
+    currentBPM = 220;
 
     // Stop increasing BPM (clear the interval)
     clearTimeout(bpmIncreaseInterval);
@@ -100,7 +100,7 @@ function finished() {
     // After 20 seconds, alert "Goodbye"
     setTimeout(() => {
         alert("Goodbye");
-    }, 20000); // Wait 20 seconds before showing the "Goodbye" alert
+    }, 30000); // Wait 30 seconds before showing the "Goodbye" alert
 }
 
 // Initialize everything
