@@ -16,23 +16,12 @@
             <button onclick="checkCode()">Submit</button>
         </div>
     </div>
-
-    <!-- Content of the app (hidden until code is correct) -->
-    <div id="top-texts">
-        <div id="aim-text">Aim: </div>
-        <div id="with-text">With: </div>
-    </div>
     
     <div class="container">
-        <img id="image" src="" alt="DB DATABASE (v2.7)">
+        <img id="image" src="" alt="DB DATABASE (v3)">
     </div>
     
     <audio id="click-sound" src="click.mp3" preload="auto"></audio>
-
-    <!-- Random Message -->
-    <div id="random-message">
-        <!-- Random message will appear here -->
-    </div>
 
     <!-- Checkboxes for Vibrate and Background Music -->
     <div id="checkbox-container">
@@ -43,6 +32,9 @@
             <input type="checkbox" id="vibrate-checkbox"> Vibrate
         </label>
     </div>
+
+    <!-- "I'm Done" Button -->
+    <button id="done-button" onclick="finished()">I'm Done</button>
 
     <!-- External JavaScript -->
     <script src="script.js"></script>
