@@ -19,6 +19,26 @@ body {
   animation: scaleUpContainer 1.5s ease-out; /* Scaling up the content */
 }
 
+/* Style for the "I'm Done" button */
+#done-button {
+    padding: 10px 20px;
+    background-color: #4CAF50; /* Green */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    position: fixed;  /* Fixed positioning */
+    bottom: 20px;     /* 20px from the bottom of the screen */
+    left: 50%;        /* Center it horizontally */
+    transform: translateX(-50%);  /* Adjust to truly center the button */
+    z-index: 1000;    /* Make sure it stays on top of other content */
+}
+
+#done-button:hover {
+    background-color: #45a049;
+}
+
 /* Styling for the top text container */
 #top-texts {
   position: absolute;
