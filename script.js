@@ -1,11 +1,9 @@
-const imageElement = document.getElementById("image");
-const clickSound = document.getElementById("click-sound");
-
 let images = [];
 let currentBPM = 60;
 let stage = 0;
 let metronomeTimeout;
 const bgAudio = new Audio("bg.mp3");
+let bpmIncreaseInterval;
 
 // Fetch the image list from images.json
 async function fetchImageList() {
@@ -18,13 +16,13 @@ async function fetchImageList() {
 function changeImage() {
     if (images.length > 0) {
         const randomImage = images[Math.floor(Math.random() * images.length)];
-        imageElement.src = randomImage;
+        document.getElementById("image").src = randomImage;
     }
 }
 
 // Play metronome sound and vibrate on each beat
 function playMetronome() {
-    // Play the metronome sound
+    const clickSound = document.getElementById("click-sound");
     clickSound.volume = 0.1;
     clickSound.currentTime = 0;
     clickSound.play();
@@ -71,11 +69,12 @@ function increaseBPM() {
         stage = 3;
     }
     
-    setTimeout(increaseBPM, 25000); // Increase BPM every 25s
+    bpmIncreaseInterval = setTimeout(increaseBPM, 25000); // Increase BPM every 25s
 }
 
 // Initialize background music
 function initBgMusic() {
+    const bgAudio = new Audio("bg.mp3");
     // Check if the background music checkbox is checked
     if (document.getElementById("background-checkbox").checked) {
         bgAudio.volume = 0.5;
@@ -86,8 +85,25 @@ function initBgMusic() {
     }
 }
 
-// Remove pauseMetronome to avoid breaks
-// Function to initialize everything
+// Function to stop the metronome, slow it down, and alert after 20 seconds
+function finished() {
+    // Slow down the BPM to 150
+    currentBPM = 150;
+
+    // Stop increasing BPM (clear the interval)
+    clearTimeout(bpmIncreaseInterval);
+
+    // Stop the metronome from playing
+    clearTimeout(metronomeTimeout);
+    playMetronome();  // Restart metronome with new slower BPM
+
+    // After 20 seconds, alert "Goodbye"
+    setTimeout(() => {
+        alert("Goodbye");
+    }, 20000); // Wait 20 seconds before showing the "Goodbye" alert
+}
+
+// Initialize everything
 async function init() {
     await fetchImageList();
     changeImage();
@@ -110,6 +126,6 @@ function checkCode() {
     }
 }
 
-// Add event listeners to checkboxes to start/stop background music and vibration
-document.getElementById("background-checkbox").addEventListener('change', initBgMusic);
-document.getElementById("vibrate-checkbox").addEventListener('change', playMetronome);
+// Event listener for "I'm Done" button
+document.getElementById("done-button").addEventListener('click', finished);
+
