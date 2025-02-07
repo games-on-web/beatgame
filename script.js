@@ -1,14 +1,5 @@
 const imageElement = document.getElementById("image");
 const clickSound = document.getElementById("click-sound");
-const aimTextElement = document.getElementById("aim-text");
-const withTextElement = document.getElementById("with-text");
-
-aimTextElement.style.display = "none";
-withTextElement.style.display = "none";
-
-// Don't display messages
-const messageElement = document.getElementById("random-message");
-messageElement.style.display = "none"; // Ensure no messages are shown
 
 let images = [];
 let currentBPM = 60;
