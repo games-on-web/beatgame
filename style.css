@@ -21,7 +21,7 @@ body {
 
 /* Style for the "I'm Done" button */
 #done-button {
-    padding: 10px 20px;
+    padding: 10px 50px;
     background-color: #4CAF50; /* Green */
     color: white;
     border: none;
