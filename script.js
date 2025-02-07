@@ -1,11 +1,14 @@
 const imageElement = document.getElementById("image");
 const clickSound = document.getElementById("click-sound");
-const messageElement = document.getElementById("random-message");
 const aimTextElement = document.getElementById("aim-text");
 const withTextElement = document.getElementById("with-text");
 
 aimTextElement.style.display = "none";
 withTextElement.style.display = "none";
+
+// Don't display messages
+const messageElement = document.getElementById("random-message");
+messageElement.style.display = "none"; // Ensure no messages are shown
 
 let images = [];
 let currentBPM = 60;
@@ -13,12 +16,7 @@ let stage = 0;
 let metronomeTimeout;
 const bgAudio = new Audio("bg.mp3");
 
-const messages = [
-    "Eat all left!",
-    "Spit on it!"
-];
-
-// Fetch the image list from images.json 
+// Fetch the image list from images.json
 async function fetchImageList() {
     const response = await fetch('./images.json');
     const data = await response.json();
@@ -97,28 +95,8 @@ function initBgMusic() {
     }
 }
 
-// Pause the metronome for 15 seconds every 50 seconds + show message
-function pauseMetronome() {
-    clearTimeout(metronomeTimeout);
-    showRandomMessage();
-    setTimeout(playMetronome, 20000); // Resume the metronome after 15 seconds
-    setTimeout(pauseMetronome, 50000); // Pause the metronome again after 50 seconds
-}
-
-// Show a random message for a longer duration with wait
-function showRandomMessage() {
-    const randomMessage = messages[Math.floor(Math.random() * messages.length)];
-    messageElement.textContent = randomMessage;
-    messageElement.style.display = "block";
-
-    const messageDuration = 8000;  // Message will be shown for 8 seconds
-
-    setTimeout(() => {
-        messageElement.style.display = "none"; // Hide the message
-    }, messageDuration);
-}
-
-// Initialize everything
+// Remove pauseMetronome to avoid breaks
+// Function to initialize everything
 async function init() {
     await fetchImageList();
     changeImage();
@@ -126,13 +104,12 @@ async function init() {
     increaseBPM();
     playMetronome();
     initBgMusic();
-    pauseMetronome();
 }
 
 // Code validation function for security
 function checkCode() {
     const enteredCode = document.getElementById("security-code").value;
-    const correctCode = " 19699";  // Example code for checking.
+    const correctCode = " 19699";  // Example code for checking. (KEEP THE SPACE AT START)
 
     if (enteredCode === correctCode) {
         document.getElementById("security-overlay").style.display = "none";
