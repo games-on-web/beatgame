@@ -3,40 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Beat Game</title>
-    <link rel="stylesheet" href="style.css"> <!-- Linking to the external CSS -->
+    <title>Beat Session | Production</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <!-- Security Overlay -->
-    <div id="security-overlay">
-        <div id="security-box">
-            <h2>Please Enter the Code</h2>
-            <input type="text" id="security-code" placeholder="Enter code">
-            <button onclick="checkCode()">Submit</button>
+<div id="landing-page" class="overlay">
+    <div class="content-box">
+        <h1>Welcome in Goon for Alice Delish Game!</h1>
+        <div class="about-text">
+            <p>This is a ADULT game ONLY, only enter if you are above 18!</p>
+            <p>This game will show automated pictures of alice delish that you can goon to!</p>
+            <p>You can set cool settings like metronome, speed, and censoring!</p>
         </div>
+        <button onclick="showSettings()">PLAY</button>
     </div>
-    
-    <div class="container">
-        <img id="image" src="" alt="DB DATABASE (v3)">
+</div>
+
+<div id="settings-page" class="overlay" style="display: none;">
+    <div class="content-box settings-grid">
+        <h2>GAME CONFIGURATION</h2>
+        
+        <div class="setting-item">
+            <label>Censored Mode</label>
+            <input type="checkbox" id="censor-check">
+        </div>
+
+        <div class="setting-item">
+            <label>Censoring Strength</label>
+            <input type="range" id="pixel-slider" min="0" max="20" value="10">
+        </div>
+
+        <div class="setting-item">
+            <label>Image Refresh Speed (milliseconds)</label>
+            <input type="number" id="speed-input" value="5000" step="500">
+        </div>
+
+        <div class="setting-item">
+            <label>Difficulty</label>
+            <select id="difficulty-select">
+                <option value="easy">Easy (Slow)</option>
+                <option value="medium" selected>Medium (Moderate)</option>
+                <option value="hard">Hard (Fast)</option>
+                <option value="extreme">🥵Extreme (Very Fast)</option>
+            </select>
+        </div>
+
+        <button id="start-session-btn" class="glow-btn">START SESSION</button>
     </div>
-    
-    <audio id="click-sound" src="click.mp3" preload="auto"></audio>
+</div>
 
-    <!-- Checkboxes for Vibrate and Background Music -->
-    <div id="checkbox-container">
-        <label>
-            <input type="checkbox" id="background-checkbox"> BG
-        </label>
-        <label>
-            <input type="checkbox" id="vibrate-checkbox"> Vibrate
-        </label>
+<header class="topbar">
+    <div class="brand"><div class="dot"></div> SESSION</div>
+    <div class="live-settings">
+        <label>Music <input type="checkbox" id="bg-toggle"></label>
+        <label>Metronome <input type="checkbox" id="metro-toggle" checked></label>
     </div>
+</header>
 
-    <!-- "I'm Done" Button -->
-    <button id="done-button" onclick="finished()">Finish</button>
+<main class="layout">
+    <section class="viewer">
+        <div id="beat-flash"></div>
+        <img id="main-image" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">
+        <div class="vignette"></div>
+    </section>
 
-    <!-- External JavaScript -->
-    <script src="script.js"></script>
+    <aside class="panel">
+        <div class="stat"><span>BPM</span><div id="bpm-display">000</div></div>
+        <div class="stat"><span>STAGE</span><div id="stage-display">0</div></div>
+        <div class="controls">
+            <button id="edge-btn">EDGE</button>
+            <button onclick="location.reload()">END</button>
+        </div>
+    </aside>
+</main>
+
+<audio id="click-sound" src="click.mp3"></audio>
+<script src="script.js"></script>
 </body>
 </html>
