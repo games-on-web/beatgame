@@ -1,131 +1,124 @@
-let images = [];
-let currentBPM = 60;
-let stage = 0;
-let metronomeTimeout;
-const bgAudio = new Audio("bg.mp3");
-let bpmIncreaseInterval;
+const state = {
+    images: [],
+    bpm: 60,
+    stage: 0,
+    isEdge: false,
+    config: { censored: false, pixel: 10, speed: 5000, difficulty: 'medium' },
+    audio: {
+        bg: new Audio("bg.mp3"),
+        click: document.getElementById('click-sound')
+    },
+    timers: { beat: null, ramp: null, image: null }
+};
 
-// Fetch the image list from images.json
-async function fetchImageList() {
-    const response = await fetch('./images.json');
-    const data = await response.json();
-    images = data.images;
+const diffLevels = {
+    easy: { start: 50, inc: 1 },
+    medium: { start: 70, inc: 2 },
+    hard: { start: 100, inc: 4 },
+    extreme: { start: 140, inc: 7 }
+};
+
+function showSettings() {
+    document.getElementById('landing-page').style.display = 'none';
+    document.getElementById('settings-page').style.display = 'flex';
 }
 
-// Change the displayed image
-function changeImage() {
-    if (images.length > 0) {
-        const randomImage = images[Math.floor(Math.random() * images.length)];
-        document.getElementById("image").src = randomImage;
-    }
+async function fetchContent() {
+    try {
+        const r = await fetch("./images.json");
+        const d = await r.json();
+        state.images = d.images;
+    } catch (e) { console.error("Could not find images.json"); }
 }
 
-// Play metronome sound and vibrate on each beat
-function playMetronome() {
-    const clickSound = document.getElementById("click-sound");
-    clickSound.volume = 0.1;
-    clickSound.currentTime = 0;
-    clickSound.play();
+function runBeat() {
+    if (!state.isEdge) {
+        // Sound
+        if (document.getElementById('metro-toggle').checked) {
+            state.audio.click.currentTime = 0;
+            state.audio.click.volume = 0.3;
+            state.audio.click.play().catch(()=>{});
+        }
 
-    // Check if the vibrate checkbox is checked
-    if (document.getElementById("vibrate-checkbox").checked) {
+        // Animation
+        const flash = document.getElementById('beat-flash');
+        const img = document.getElementById('main-image');
+        flash.style.opacity = "0.25";
+        img.style.transform = "scale(1.06)";
+        
         setTimeout(() => {
-            if ("vibrate" in navigator) {
-                navigator.vibrate(300); // Vibrate for 300 milliseconds
-            }
-        }, 200); // Small delay for best sound alignment
+            flash.style.opacity = "0";
+            img.style.transform = "scale(1)";
+        }, 60);
     }
 
-    // Set the interval based on the current BPM
-    const interval = 60000 / currentBPM;
+    document.getElementById('bpm-display').innerText = Math.floor(state.bpm).toString().padStart(3, '0');
     
-    // Clear previous timeout and set the next beat
-    clearTimeout(metronomeTimeout);
-    metronomeTimeout = setTimeout(playMetronome, interval);
+    // Dynamic scheduling for perfect timing
+    clearTimeout(state.timers.beat);
+    state.timers.beat = setTimeout(runBeat, 60000 / state.bpm);
 }
 
-// Function to increase BPM and make the metronome more challenging
-function increaseBPM() {
-    if (stage === 0) {
-        currentBPM = 20 + Math.floor(Math.random() * 40); // Stage 0: 20 to 60 BPM
-    } else if (stage === 1) {
-        currentBPM = 60 + Math.floor(Math.random() * 40); // Stage 1: 60 to 100 BPM
-    } else if (stage === 2) {
-        currentBPM = 100 + Math.floor(Math.random() * 50); // Stage 2: 100 to 150 BPM
-    } else if (stage === 3) {
-        currentBPM = 150 + Math.floor(Math.random() * 60); // Stage 3: 150 to 210 BPM
-    } else if (stage === 4) {
-        currentBPM = 210 + Math.floor(Math.random() * 70); // Stage 4: 210 to 280 BPM
-    } else if (stage === 5) {
-        currentBPM = 280 + Math.floor(Math.random() * 70); // Stage 5: 280 to 350 BPM
-    } else if (stage === 6) {
-        currentBPM = 350 + Math.floor(Math.random() * 80); // Stage 6: TURBO
+function startSession() {
+    // 1. Map Settings
+    state.config.censored = document.getElementById('censor-check').checked;
+    state.config.pixel = document.getElementById('pixel-slider').value;
+    state.config.speed = parseInt(document.getElementById('speed-input').value);
+    state.config.difficulty = document.getElementById('difficulty-select').value;
+
+    const diff = diffLevels[state.config.difficulty];
+    state.bpm = diff.start;
+
+    // 2. Apply Visual Filters
+    if (state.config.censored) {
+        document.getElementById('main-image').style.filter = `blur(${state.config.pixel}px) contrast(1.1)`;
     }
-    
-    stage++;
-    
-    // If we reach the highest stage, go to mid stage
-    if (stage > 6) {
-        stage = 3;
+
+    // 3. UI Swap
+    document.getElementById('settings-page').style.display = 'none';
+
+    // 4. Audio Init
+    if (document.getElementById('bg-toggle').checked) {
+        state.audio.bg.loop = true;
+        state.audio.bg.volume = 0.5;
+        state.audio.bg.play().catch(()=>{});
     }
-    
-    bpmIncreaseInterval = setTimeout(increaseBPM, 25000); // Increase BPM every 25s
+
+    // 5. Start Game Loops
+    fetchContent().then(() => {
+        cycleImage();
+        state.timers.image = setInterval(cycleImage, state.config.speed);
+    });
+
+    runBeat();
+
+    state.timers.ramp = setInterval(() => {
+        if (!state.isEdge) {
+            state.bpm += diff.inc;
+            state.stage = Math.floor((state.bpm - diff.start) / 15);
+            document.getElementById('stage-display').innerText = state.stage;
+        }
+    }, 10000);
 }
 
-// Initialize background music
-function initBgMusic() {
-    const bgAudio = new Audio("bg.mp3");
-    // Check if the background music checkbox is checked
-    if (document.getElementById("background-checkbox").checked) {
-        bgAudio.volume = 0.5;
-        bgAudio.loop = true;
-        bgAudio.play();
-    } else {
-        bgAudio.pause(); // Pause background music if not checked
+function cycleImage() {
+    if (state.images.length > 0) {
+        const img = document.getElementById('main-image');
+        img.src = state.images[Math.floor(Math.random() * state.images.length)];
     }
 }
 
-// Function to stop the metronome, slow it down, and alert after 20 seconds
-function finished() {
-    // Slow down the BPM to 275
-    currentBPM = 275;
+// Global Controls
+document.getElementById('start-session-btn').onclick = startSession;
 
-    // Stop increasing BPM (clear the interval)
-    clearTimeout(bpmIncreaseInterval);
-
-    // Stop the metronome from playing
-    clearTimeout(metronomeTimeout);
-    playMetronome();  // Restart metronome with new slower BPM
-
-    // After 35 seconds, alert "Goodbye"
+document.getElementById('edge-btn').onclick = () => {
+    state.isEdge = true;
+    const img = document.getElementById('main-image');
+    const prevFilter = img.style.filter;
+    img.style.filter = "grayscale(1) brightness(0.3) blur(2px)";
+    
     setTimeout(() => {
-        alert("Goodbye");
-    }, 35000); // Wait 35 seconds before showing the "Goodbye" alert
-}
-
-// Initialize everything
-async function init() {
-    await fetchImageList();
-    changeImage();
-    setInterval(changeImage, 8000);
-    increaseBPM();
-    playMetronome();
-    initBgMusic();
-}
-
-// Code validation function for security
-function checkCode() {
-    const enteredCode = document.getElementById("security-code").value;
-    const correctCode = " 19699";  // Example code for checking. (KEEP THE SPACE AT START)
-
-    if (enteredCode === correctCode) {
-        document.getElementById("security-overlay").style.display = "none";
-        init();  // Call the init() function to start the game
-    } else {
-        alert("Incorrect code! Try again.");
-    }
-}
-
-// Event listener for "I'm Done" button
-document.getElementById("done-button").addEventListener('click', finished);
-
+        state.isEdge = false;
+        img.style.filter = prevFilter;
+    }, 12000);
+};
