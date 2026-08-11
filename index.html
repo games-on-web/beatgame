@@ -1,85 +1,148 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Beat Session | Production</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#090909">
+  <title>Image Session</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div id="landing-page" class="overlay">
-    <div class="content-box">
-        <h1>Welcome in Goon for Alice Delish Game!</h1>
-        <div class="about-text">
-            <p>This is a ADULT game ONLY, only enter if you are above 18!</p>
-            <p>This game will show automated pictures of alice delish that you can goon to!</p>
-            <p>You can set cool settings like metronome, speed, and censoring!</p>
-        </div>
-        <button onclick="showSettings()">PLAY</button>
+  <div id="landing-page" class="modal-screen">
+    <div class="welcome-card">
+      <span class="eyebrow">GOON FOR ALICE</span>
+      <h1>Welcome GOONER</h1>
+      <p>Are you ready to goon for alice?</p>
+      <button class="primary-btn" onclick="showSettings()">YES!</button>
     </div>
-</div>
+  </div>
 
-<div id="settings-page" class="overlay" style="display: none;">
-    <div class="content-box settings-grid">
-        <h2>GAME CONFIGURATION</h2>
-        
-        <div class="setting-item">
-            <label>Censored Mode</label>
-            <input type="checkbox" id="censor-check">
+  <div id="settings-page" class="modal-screen is-hidden">
+    <div class="settings-card">
+      <div class="modal-head">
+        <div>
+          <span class="eyebrow">SETUP</span>
+          <h2>Session settings</h2>
         </div>
+        <button class="icon-btn" onclick="showLanding()" aria-label="Close settings">×</button>
+      </div>
 
-        <div class="setting-item">
-            <label>Censoring Strength</label>
-            <input type="range" id="pixel-slider" min="0" max="20" value="10">
-        </div>
+      <div class="settings-list">
+        <label class="setting-row">
+          <span>
+            <strong>Censored mode</strong>
+            <small>Apply a soft blur to the image, LOSER.</small>
+          </span>
+          <input type="checkbox" id="censor-check">
+        </label>
 
-        <div class="setting-item">
-            <label>Image Refresh Speed (milliseconds)</label>
-            <input type="number" id="speed-input" value="5000" step="500">
-        </div>
+        <label class="setting-row range-row">
+          <span>
+            <strong>Blur strength</strong>
+            <small><output id="pixel-value">10</output> px</small>
+          </span>
+          <input type="range" id="pixel-slider" min="0" max="20" value="10">
+        </label>
 
-        <div class="setting-item">
-            <label>Difficulty</label>
-            <select id="difficulty-select">
-                <option value="easy">Easy (Slow)</option>
-                <option value="medium" selected>Medium (Moderate)</option>
-                <option value="hard">Hard (Fast)</option>
-                <option value="extreme">🥵Extreme (Very Fast)</option>
-            </select>
-        </div>
+        <label class="setting-row">
+          <span>
+            <strong>Image interval</strong>
+            <small>How often the image changes.</small>
+          </span>
+          <select id="speed-input">
+            <option value="1000">1 sec</option>
+            <option value="2500">2.5 sec</option>
+            <option value="4000">4 sec</option>
+            <option value="5000" selected>5 sec</option>
+            <option value="7000">7 sec</option>
+            <option value="10000">10 sec</option>
+          </select>
+        </label>
 
-        <button id="start-session-btn" class="glow-btn">START SESSION</button>
+        <label class="setting-row">
+          <span>
+            <strong>Difficulty</strong>
+            <small>Controls the session pace.</small>
+          </span>
+          <select id="difficulty-select">
+            <option value="easy">Easy</option>
+            <option value="medium" selected>Medium</option>
+            <option value="hard">Hard</option>
+            <option value="extreme">Extreme 🥵</option>
+          </select>
+        </label>
+
+        <label class="setting-row">
+          <span>
+            <strong>Music</strong>
+            <small>Play some nice background audio 🥵.</small>
+          </span>
+          <input type="checkbox" id="bg-toggle">
+        </label>
+
+        <label class="setting-row">
+          <span>
+            <strong>Metronome</strong>
+            <small>Visual and click feedback.</small>
+          </span>
+          <input type="checkbox" id="metro-toggle" checked>
+        </label>
+      </div>
+
+      <button id="start-session-btn" class="primary-btn">Start session</button>
     </div>
-</div>
+  </div>
 
-<header class="topbar">
-    <div class="brand"><div class="dot"></div> SESSION</div>
-    <div class="live-settings">
-        <label>Music <input type="checkbox" id="bg-toggle"></label>
-        <label>Metronome <input type="checkbox" id="metro-toggle" checked></label>
-    </div>
-</header>
+  <main id="session" class="session is-hidden">
+    <section class="viewer" id="viewer">
+      <div class="image-wrap">
+        <img id="main-image" alt="Session image">
+      </div>
 
-<main class="layout">
-    <section class="viewer">
-        <div id="beat-flash"></div>
-        <img id="main-image" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">
-        <div class="vignette"></div>
-    </section>
+      <div id="beat-flash" aria-hidden="true"></div>
+      <div class="image-shade" aria-hidden="true"></div>
 
-    <aside class="panel">
-        <div class="stat"><span>BPM</span><div id="bpm-display">000</div></div>
-        <div class="stat"><span>STAGE</span><div id="stage-display">0</div></div>
+      <header class="hud top-hud">
+        <div class="brand">
+          <span class="brand-mark"></span>
+          <span>SESSION</span>
+        </div>
+
+        <div class="top-actions">
+          <button id="music-btn" class="hud-btn" aria-label="Toggle music">♫</button>
+          <button id="metro-btn" class="hud-btn is-active" aria-label="Toggle metronome">◉</button>
+          <button id="settings-btn" class="hud-btn" aria-label="Open settings">☰</button>
+        </div>
+      </header>
+
+      <div class="hud bottom-hud">
+        <div class="stats">
+          <div class="stat">
+            <span>BPM</span>
+            <strong id="bpm-display">000</strong>
+          </div>
+          <div class="stat">
+            <span>STAGE</span>
+            <strong id="stage-display">0</strong>
+          </div>
+        </div>
+
         <div class="controls">
-            <button id="edge-btn">EDGE</button>
-            <button onclick="location.reload()">END</button>
+          <button id="edge-btn" class="ghost-btn">Focus</button>
+          <button id="end-btn" class="ghost-btn">End</button>
         </div>
-    </aside>
-</main>
+      </div>
 
-<audio id="click-sound" src="click.mp3"></audio>
-<script src="script.js"></script>
+      <div id="session-progress" class="progress"></div>
+    </section>
+  </main>
+
+  <audio id="click-sound" src="click.mp3" preload="auto"></audio>
+
+  <script src="script.js"></script>
 </body>
 </html>

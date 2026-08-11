@@ -1,124 +1,250 @@
 const state = {
-    images: [],
-    bpm: 60,
-    stage: 0,
-    isEdge: false,
-    config: { censored: false, pixel: 10, speed: 5000, difficulty: 'medium' },
-    audio: {
-        bg: new Audio("bg.mp3"),
-        click: document.getElementById('click-sound')
-    },
-    timers: { beat: null, ramp: null, image: null }
+  images: [],
+  imageIndex: -1,
+  bpm: 60,
+  stage: 0,
+  isEdge: false,
+  config: {
+    censored: false,
+    pixel: 10,
+    speed: 5000,
+    difficulty: "medium"
+  },
+  audio: {
+    bg: new Audio("bg.mp3"),
+    click: document.getElementById("click-sound")
+  },
+  timers: {
+    beat: null,
+    ramp: null,
+    image: null
+  }
 };
 
 const diffLevels = {
-    easy: { start: 50, inc: 1 },
-    medium: { start: 70, inc: 2 },
-    hard: { start: 100, inc: 4 },
-    extreme: { start: 140, inc: 7 }
+  easy: { start: 50, inc: 1 },
+  medium: { start: 70, inc: 2 },
+  hard: { start: 100, inc: 4 },
+  extreme: { start: 140, inc: 7 }
 };
 
+const $ = (id) => document.getElementById(id);
+const viewer = $("viewer");
+const image = $("main-image");
+
 function showSettings() {
-    document.getElementById('landing-page').style.display = 'none';
-    document.getElementById('settings-page').style.display = 'flex';
+  $("landing-page").classList.add("is-hidden");
+  $("settings-page").classList.remove("is-hidden");
+}
+
+function showLanding() {
+  $("settings-page").classList.add("is-hidden");
+  $("landing-page").classList.remove("is-hidden");
+}
+
+function applyImageFilter() {
+  if (state.config.censored) {
+    image.style.filter = `blur(${state.config.pixel}px)`;
+  } else {
+    image.style.filter = "none";
+  }
 }
 
 async function fetchContent() {
-    try {
-        const r = await fetch("./images.json");
-        const d = await r.json();
-        state.images = d.images;
-    } catch (e) { console.error("Could not find images.json"); }
-}
+  try {
+    const response = await fetch("./images.json", { cache: "no-store" });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
-function runBeat() {
-    if (!state.isEdge) {
-        // Sound
-        if (document.getElementById('metro-toggle').checked) {
-            state.audio.click.currentTime = 0;
-            state.audio.click.volume = 0.3;
-            state.audio.click.play().catch(()=>{});
-        }
+    const data = await response.json();
+    state.images = Array.isArray(data.images) ? data.images.filter(Boolean) : [];
 
-        // Animation
-        const flash = document.getElementById('beat-flash');
-        const img = document.getElementById('main-image');
-        flash.style.opacity = "0.25";
-        img.style.transform = "scale(1.06)";
-        
-        setTimeout(() => {
-            flash.style.opacity = "0";
-            img.style.transform = "scale(1)";
-        }, 60);
+    if (!state.images.length) {
+      throw new Error("images.json contains no images");
     }
-
-    document.getElementById('bpm-display').innerText = Math.floor(state.bpm).toString().padStart(3, '0');
-    
-    // Dynamic scheduling for perfect timing
-    clearTimeout(state.timers.beat);
-    state.timers.beat = setTimeout(runBeat, 60000 / state.bpm);
-}
-
-function startSession() {
-    // 1. Map Settings
-    state.config.censored = document.getElementById('censor-check').checked;
-    state.config.pixel = document.getElementById('pixel-slider').value;
-    state.config.speed = parseInt(document.getElementById('speed-input').value);
-    state.config.difficulty = document.getElementById('difficulty-select').value;
-
-    const diff = diffLevels[state.config.difficulty];
-    state.bpm = diff.start;
-
-    // 2. Apply Visual Filters
-    if (state.config.censored) {
-        document.getElementById('main-image').style.filter = `blur(${state.config.pixel}px) contrast(1.1)`;
-    }
-
-    // 3. UI Swap
-    document.getElementById('settings-page').style.display = 'none';
-
-    // 4. Audio Init
-    if (document.getElementById('bg-toggle').checked) {
-        state.audio.bg.loop = true;
-        state.audio.bg.volume = 0.5;
-        state.audio.bg.play().catch(()=>{});
-    }
-
-    // 5. Start Game Loops
-    fetchContent().then(() => {
-        cycleImage();
-        state.timers.image = setInterval(cycleImage, state.config.speed);
-    });
-
-    runBeat();
-
-    state.timers.ramp = setInterval(() => {
-        if (!state.isEdge) {
-            state.bpm += diff.inc;
-            state.stage = Math.floor((state.bpm - diff.start) / 15);
-            document.getElementById('stage-display').innerText = state.stage;
-        }
-    }, 10000);
+  } catch (error) {
+    console.error("Could not load images.json:", error);
+    image.alt = "No images found. Add image paths to images.json.";
+  }
 }
 
 function cycleImage() {
-    if (state.images.length > 0) {
-        const img = document.getElementById('main-image');
-        img.src = state.images[Math.floor(Math.random() * state.images.length)];
-    }
+  if (!state.images.length) return;
+
+  let next = Math.floor(Math.random() * state.images.length);
+
+  if (state.images.length > 1 && next === state.imageIndex) {
+    next = (next + 1) % state.images.length;
+  }
+
+  state.imageIndex = next;
+
+  image.classList.add("is-changing");
+  image.src = state.images[next];
+
+  requestAnimationFrame(() => {
+    image.classList.remove("is-changing");
+  });
+
+  resetProgress();
 }
 
-// Global Controls
-document.getElementById('start-session-btn').onclick = startSession;
+function resetProgress() {
+  const progress = $("session-progress");
+  progress.style.transition = "none";
+  progress.style.transform = "scaleX(0)";
 
-document.getElementById('edge-btn').onclick = () => {
-    state.isEdge = true;
-    const img = document.getElementById('main-image');
-    const prevFilter = img.style.filter;
-    img.style.filter = "grayscale(1) brightness(0.3) blur(2px)";
-    
+  requestAnimationFrame(() => {
+    progress.style.transition = `transform ${state.config.speed}ms linear`;
+    progress.style.transform = "scaleX(1)";
+  });
+}
+
+function runBeat() {
+  if (!state.isEdge && $("metro-toggle").checked) {
+    const click = state.audio.click;
+
+    if (click) {
+      click.currentTime = 0;
+      click.volume = 0.25;
+      click.play().catch(() => {});
+    }
+
+    $("beat-flash").style.opacity = "0.09";
+    image.style.transform = "scale(1.012)";
+
     setTimeout(() => {
-        state.isEdge = false;
-        img.style.filter = prevFilter;
-    }, 12000);
-};
+      $("beat-flash").style.opacity = "0";
+      image.style.transform = "scale(1)";
+    }, 65);
+  }
+
+  $("bpm-display").textContent = String(Math.floor(state.bpm)).padStart(3, "0");
+
+  clearTimeout(state.timers.beat);
+  state.timers.beat = setTimeout(runBeat, 60000 / Math.max(state.bpm, 1));
+}
+
+function startSession() {
+  state.config.censored = $("censor-check").checked;
+  state.config.pixel = Number($("pixel-slider").value);
+  state.config.speed = Number($("speed-input").value);
+  state.config.difficulty = $("difficulty-select").value;
+
+  const diff = diffLevels[state.config.difficulty];
+  state.bpm = diff.start;
+  state.stage = 0;
+
+  applyImageFilter();
+
+  $("settings-page").classList.add("is-hidden");
+  $("landing-page").classList.add("is-hidden");
+  $("session").classList.remove("is-hidden");
+
+  if ($("bg-toggle").checked) {
+    state.audio.bg.loop = true;
+    state.audio.bg.volume = 0.28;
+    state.audio.bg.play().catch(() => {});
+  }
+
+  clearInterval(state.timers.image);
+  clearInterval(state.timers.ramp);
+  clearTimeout(state.timers.beat);
+
+  fetchContent().then(() => {
+    cycleImage();
+    state.timers.image = setInterval(cycleImage, state.config.speed);
+  });
+
+  runBeat();
+
+  state.timers.ramp = setInterval(() => {
+    if (!state.isEdge) {
+      state.bpm += diff.inc;
+      state.stage = Math.floor((state.bpm - diff.start) / 15);
+      $("stage-display").textContent = String(state.stage);
+    }
+  }, 10000);
+
+  // Keep the interface visually quiet.
+  viewer.classList.add("clean");
+}
+
+function toggleMusic() {
+  const enabled = $("bg-toggle").checked;
+  $("bg-toggle").checked = !enabled;
+
+  if (!enabled) {
+    state.audio.bg.loop = true;
+    state.audio.bg.volume = 0.28;
+    state.audio.bg.play().catch(() => {});
+  } else {
+    state.audio.bg.pause();
+  }
+
+  $("music-btn").classList.toggle("is-active", !enabled);
+}
+
+function toggleMetronome() {
+  $("metro-toggle").checked = !$("metro-toggle").checked;
+  $("metro-btn").classList.toggle("is-active", $("metro-toggle").checked);
+}
+
+function toggleFocus() {
+  state.isEdge = !state.isEdge;
+  $("edge-btn").classList.toggle("is-active", state.isEdge);
+
+  if (state.isEdge) {
+    image.style.filter = "grayscale(1) brightness(.62) blur(1px)";
+  } else {
+    applyImageFilter();
+  }
+}
+
+function endSession() {
+  clearInterval(state.timers.image);
+  clearInterval(state.timers.ramp);
+  clearTimeout(state.timers.beat);
+
+  state.audio.bg.pause();
+  state.audio.bg.currentTime = 0;
+
+  state.isEdge = false;
+  state.imageIndex = -1;
+
+  $("session").classList.add("is-hidden");
+  $("settings-page").classList.add("is-hidden");
+  $("landing-page").classList.remove("is-hidden");
+  $("stage-display").textContent = "0";
+  $("bpm-display").textContent = "000";
+  $("edge-btn").classList.remove("is-active");
+}
+
+$("start-session-btn").addEventListener("click", startSession);
+$("settings-btn").addEventListener("click", showSettings);
+$("music-btn").addEventListener("click", toggleMusic);
+$("metro-btn").addEventListener("click", toggleMetronome);
+$("edge-btn").addEventListener("click", toggleFocus);
+$("end-btn").addEventListener("click", endSession);
+
+$("pixel-slider").addEventListener("input", (event) => {
+  $("pixel-value").textContent = event.target.value;
+  state.config.pixel = Number(event.target.value);
+  applyImageFilter();
+});
+
+$("censor-check").addEventListener("change", applyImageFilter);
+
+window.addEventListener("keydown", (event) => {
+  if (event.code === "Space" && !$("session").classList.contains("is-hidden")) {
+    event.preventDefault();
+    cycleImage();
+  }
+
+  if (event.key.toLowerCase() === "f" && !$("session").classList.contains("is-hidden")) {
+    toggleFocus();
+  }
+
+  if (event.key === "Escape" && !$("settings-page").classList.contains("is-hidden")) {
+    showLanding();
+  }
+});
