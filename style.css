@@ -1,11 +1,15 @@
 :root {
-  --bg: #080808;
-  --panel: rgba(16, 16, 16, 0.78);
-  --line: rgba(255, 255, 255, 0.12);
-  --text: #f5f5f5;
-  --muted: rgba(255, 255, 255, 0.52);
-  --accent: #ffffff;
-  --accent-soft: rgba(255, 255, 255, 0.12);
+  --bg: #07050b;
+  --panel: rgba(20, 14, 28, 0.86);
+  --line: rgba(255, 255, 255, 0.14);
+  --text: #f8f5ff;
+  --muted: rgba(255, 255, 255, 0.58);
+
+  --accent: #c77dff;
+  --accent-2: #7c5cff;
+  --accent-3: #ff5fa2;
+
+  --accent-soft: rgba(199, 125, 255, 0.16);
 }
 
 * {
@@ -38,6 +42,28 @@ button {
   display: none !important;
 }
 
+/* ---------- Colorful background ---------- */
+
+body {
+  background:
+    radial-gradient(
+      circle at 15% 20%,
+      rgba(199, 125, 255, 0.20),
+      transparent 32%
+    ),
+    radial-gradient(
+      circle at 85% 75%,
+      rgba(255, 95, 162, 0.16),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 50% 100%,
+      rgba(124, 92, 255, 0.14),
+      transparent 35%
+    ),
+    #07050b;
+}
+
 /* ---------- Modals ---------- */
 
 .modal-screen {
@@ -47,19 +73,39 @@ button {
   display: grid;
   place-items: center;
   padding: 24px;
+
   background:
-    radial-gradient(circle at 50% 20%, rgba(255,255,255,.07), transparent 35%),
-    rgba(0,0,0,.92);
+    radial-gradient(
+      circle at 50% 20%,
+      rgba(199, 125, 255, 0.18),
+      transparent 35%
+    ),
+    radial-gradient(
+      circle at 20% 80%,
+      rgba(255, 95, 162, 0.10),
+      transparent 30%
+    ),
+    rgba(4, 3, 7, 0.91);
+
   backdrop-filter: blur(18px);
 }
 
 .welcome-card,
 .settings-card {
   width: min(100%, 460px);
-  border: 1px solid var(--line);
+  border: 1px solid rgba(199, 125, 255, 0.22);
   border-radius: 24px;
-  background: rgba(17,17,17,.92);
-  box-shadow: 0 24px 80px rgba(0,0,0,.5);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(34, 24, 48, 0.94),
+      rgba(15, 11, 22, 0.94)
+    );
+
+  box-shadow:
+    0 24px 80px rgba(0, 0, 0, 0.55),
+    0 0 60px rgba(124, 92, 255, 0.08);
 }
 
 .welcome-card {
@@ -74,7 +120,7 @@ button {
 .eyebrow {
   display: block;
   margin-bottom: 10px;
-  color: var(--muted);
+  color: var(--accent);
   font-size: 10px;
   font-weight: 700;
   letter-spacing: .22em;
@@ -105,14 +151,29 @@ h2 {
   min-height: 52px;
   border: 0;
   border-radius: 14px;
-  background: var(--accent);
-  color: #090909;
+
+  background: linear-gradient(
+    135deg,
+    var(--accent),
+    var(--accent-2)
+  );
+
+  color: #fff;
   font-weight: 800;
-  transition: transform .2s ease, opacity .2s ease;
+
+  box-shadow:
+    0 10px 30px rgba(124, 92, 255, 0.25);
+
+  transition:
+    transform .2s ease,
+    opacity .2s ease,
+    box-shadow .2s ease;
 }
 
 .primary-btn:hover {
   transform: translateY(-2px);
+  box-shadow:
+    0 14px 38px rgba(199, 125, 255, 0.32);
 }
 
 .modal-head {
@@ -127,10 +188,18 @@ h2 {
   height: 38px;
   border: 1px solid var(--line);
   border-radius: 50%;
-  background: transparent;
+  background: rgba(255, 255, 255, .04);
   color: var(--text);
   font-size: 24px;
+  transition: .2s ease;
 }
+
+.icon-btn:hover {
+  background: var(--accent-soft);
+  border-color: rgba(199, 125, 255, .4);
+}
+
+/* ---------- Settings ---------- */
 
 .settings-list {
   display: grid;
@@ -145,7 +214,7 @@ h2 {
   align-items: center;
   min-height: 70px;
   padding: 12px 0;
-  border-bottom: 1px solid rgba(255,255,255,.07);
+  border-bottom: 1px solid rgba(255, 255, 255, .07);
 }
 
 .setting-row:last-child {
@@ -173,22 +242,25 @@ select {
   border: 1px solid var(--line);
   border-radius: 10px;
   outline: 0;
-  background: #0b0b0b;
+
+  background: #110c18;
   color: var(--text);
 }
 
 input[type="range"] {
   width: 140px;
-  accent-color: #fff;
+  accent-color: var(--accent);
 }
 
 input[type="checkbox"] {
   width: 20px;
   height: 20px;
-  accent-color: #fff;
+  accent-color: var(--accent);
 }
 
-/* ---------- Image-first session ---------- */
+/* =========================================================
+   IMAGE VIEWER
+   ========================================================= */
 
 .session,
 .viewer {
@@ -201,54 +273,172 @@ input[type="checkbox"] {
   display: grid;
   place-items: center;
   overflow: hidden;
-  background: #000;
+
+  /*
+    Colorful ambient background behind the image.
+    The image itself remains untouched.
+  */
+  background:
+    radial-gradient(
+      ellipse at center,
+      rgba(199, 125, 255, 0.20),
+      transparent 42%
+    ),
+    radial-gradient(
+      ellipse at 20% 80%,
+      rgba(255, 95, 162, 0.14),
+      transparent 35%
+    ),
+    radial-gradient(
+      ellipse at 85% 20%,
+      rgba(124, 92, 255, 0.16),
+      transparent 35%
+    ),
+    #08060d;
 }
 
+/*
+  IMPORTANT:
+  The wrapper takes the whole viewport but does NOT force
+  the image to fill it.
+*/
 .image-wrap {
   position: absolute;
   inset: 0;
+
   display: grid;
   place-items: center;
-  padding: 16px;
+
+  /*
+    Space around the image so HUD elements don't overlap it.
+  */
+  padding: 56px 32px 92px;
+
+  z-index: 1;
 }
 
+/*
+  The image will ALWAYS fit completely inside the available
+  viewport while preserving its original aspect ratio.
+*/
 #main-image {
   display: block;
-  width: 100%;
-  height: 100%;
+
+  /*
+    Don't use width:100% + height:100%.
+    This is what makes contain behave much better.
+  */
+  width: auto;
+  height: auto;
+
+  max-width: 100%;
+  max-height: 100%;
+
   object-fit: contain;
+  object-position: center;
+
   user-select: none;
   -webkit-user-drag: none;
-  transition: transform .08s ease-out, filter .25s ease;
+
+  border-radius: 12px;
+
+  /*
+    Subtle depth/glow around the image.
+  */
+  box-shadow:
+    0 20px 80px rgba(0, 0, 0, .55),
+    0 0 45px rgba(124, 92, 255, .10);
+
+  transition:
+    transform .08s ease-out,
+    filter .25s ease,
+    opacity .2s ease;
 }
 
+/*
+  A soft colorful glow behind the image.
+*/
+.image-wrap::before {
+  content: "";
+  position: absolute;
+
+  width: min(70vw, 850px);
+  height: min(70vh, 650px);
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(199, 125, 255, .20),
+      rgba(124, 92, 255, .08) 35%,
+      transparent 70%
+    );
+
+  filter: blur(50px);
+  pointer-events: none;
+}
+
+/* Keep image above the glow */
+#main-image {
+  position: relative;
+  z-index: 2;
+}
+
+/* Dark edge gradient */
 .image-shade {
   position: absolute;
   inset: 0;
+  z-index: 3;
+
   pointer-events: none;
-  background: radial-gradient(circle, transparent 45%, rgba(0,0,0,.34) 100%);
+
+  background:
+    radial-gradient(
+      ellipse at center,
+      transparent 50%,
+      rgba(0, 0, 0, .30) 100%
+    );
 }
 
+/* Beat flash */
 #beat-flash {
   position: absolute;
   inset: 0;
-  z-index: 2;
+  z-index: 4;
+
   pointer-events: none;
-  background: #fff;
+
+  background:
+    radial-gradient(
+      circle at center,
+      rgba(199, 125, 255, .30),
+      rgba(255, 95, 162, .08),
+      transparent 70%
+    );
+
   opacity: 0;
   transition: opacity .05s linear;
 }
 
+/* ---------- HUD ---------- */
+
 .hud {
   position: absolute;
-  z-index: 5;
+  z-index: 10;
+
   left: 20px;
   right: 20px;
+
   display: flex;
   align-items: center;
   justify-content: space-between;
+
   pointer-events: none;
-  transition: opacity .35s ease, transform .35s ease;
+
+  transition:
+    opacity .35s ease,
+    transform .35s ease;
 }
 
 .hud > * {
@@ -268,22 +458,34 @@ input[type="checkbox"] {
   display: flex;
   align-items: center;
   gap: 9px;
+
   padding: 10px 13px;
-  border: 1px solid var(--line);
+
+  border: 1px solid rgba(199, 125, 255, .20);
   border-radius: 999px;
-  background: rgba(8,8,8,.45);
+
+  background: rgba(10, 7, 15, .55);
+
   backdrop-filter: blur(14px);
+
   font-size: 10px;
   font-weight: 800;
   letter-spacing: .18em;
+
+  box-shadow:
+    0 8px 30px rgba(0, 0, 0, .2);
 }
 
 .brand-mark {
   width: 7px;
   height: 7px;
+
   border-radius: 50%;
-  background: #fff;
-  box-shadow: 0 0 14px rgba(255,255,255,.8);
+
+  background: var(--accent);
+
+  box-shadow:
+    0 0 14px rgba(199, 125, 255, .9);
 }
 
 .top-actions,
@@ -296,89 +498,154 @@ input[type="checkbox"] {
 
 .hud-btn,
 .ghost-btn {
-  border: 1px solid var(--line);
+  border: 1px solid rgba(255, 255, 255, .13);
+
   color: var(--text);
-  background: rgba(8,8,8,.45);
+
+  background: rgba(10, 7, 15, .55);
+
   backdrop-filter: blur(14px);
-  transition: background .2s ease, border-color .2s ease, transform .2s ease;
+
+  transition:
+    background .2s ease,
+    border-color .2s ease,
+    transform .2s ease,
+    box-shadow .2s ease;
 }
 
 .hud-btn {
   width: 38px;
   height: 38px;
+
   border-radius: 50%;
+
   font-size: 15px;
 }
 
 .hud-btn:hover,
 .ghost-btn:hover {
-  background: rgba(255,255,255,.13);
-  border-color: rgba(255,255,255,.25);
+  background: rgba(199, 125, 255, .16);
+  border-color: rgba(199, 125, 255, .40);
+
+  transform: translateY(-1px);
 }
 
 .hud-btn.is-active {
-  background: rgba(255,255,255,.15);
+  background:
+    linear-gradient(
+      135deg,
+      rgba(199, 125, 255, .28),
+      rgba(124, 92, 255, .22)
+    );
+
+  border-color: rgba(199, 125, 255, .40);
+
+  box-shadow:
+    0 0 20px rgba(124, 92, 255, .12);
 }
 
 .stats {
   gap: 22px;
+
   padding: 11px 15px;
-  border: 1px solid var(--line);
+
+  border: 1px solid rgba(199, 125, 255, .18);
   border-radius: 14px;
-  background: rgba(8,8,8,.45);
+
+  background: rgba(8, 6, 12, .55);
+
   backdrop-filter: blur(14px);
 }
 
 .stat span {
   display: block;
   margin-bottom: 3px;
+
   color: var(--muted);
+
   font-size: 8px;
   font-weight: 700;
   letter-spacing: .16em;
 }
 
 .stat strong {
+  color: var(--accent);
+
   font-size: 19px;
   letter-spacing: -.04em;
+
+  text-shadow:
+    0 0 18px rgba(199, 125, 255, .35);
 }
 
 .ghost-btn {
   min-width: 74px;
   min-height: 40px;
+
   padding: 0 15px;
+
   border-radius: 999px;
+
   font-size: 11px;
   font-weight: 700;
 }
 
 #edge-btn.is-active {
-  background: #fff;
-  color: #000;
-  border-color: #fff;
+  background:
+    linear-gradient(
+      135deg,
+      var(--accent),
+      var(--accent-2)
+    );
+
+  color: #fff;
+
+  border-color: transparent;
+
+  box-shadow:
+    0 8px 24px rgba(124, 92, 255, .25);
 }
+
+/* ---------- Progress ---------- */
 
 .progress {
   position: absolute;
-  z-index: 6;
+
+  z-index: 12;
+
   right: 0;
   bottom: 0;
   left: 0;
-  height: 2px;
+
+  height: 3px;
+
   transform-origin: left;
   transform: scaleX(0);
-  background: rgba(255,255,255,.8);
+
+  background:
+    linear-gradient(
+      90deg,
+      var(--accent-3),
+      var(--accent),
+      var(--accent-2)
+    );
+
+  box-shadow:
+    0 0 15px rgba(199, 125, 255, .45);
 }
 
-/* Less UI until the cursor approaches the edge. */
+/* ---------- Cleaner HUD ---------- */
+
 .viewer.clean .hud {
-  opacity: .16;
+  opacity: .18;
 }
 
 .viewer.clean:hover .hud,
 .viewer.clean:focus-within .hud {
   opacity: 1;
 }
+
+/* ---------- Mobile ---------- */
 
 @media (max-width: 640px) {
   .welcome-card,
@@ -413,7 +680,36 @@ input[type="checkbox"] {
     justify-content: flex-end;
   }
 
+  /*
+    More usable image area on phones.
+  */
   .image-wrap {
-    padding: 4px;
+    padding:
+      60px
+      10px
+      100px;
+  }
+
+  #main-image {
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 8px;
+  }
+}
+
+/* ---------- Very short screens ---------- */
+
+@media (max-height: 600px) {
+  .image-wrap {
+    padding-top: 48px;
+    padding-bottom: 78px;
+  }
+
+  .top-hud {
+    top: 10px;
+  }
+
+  .bottom-hud {
+    bottom: 10px;
   }
 }
