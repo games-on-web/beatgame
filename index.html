@@ -2,147 +2,497 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#090909">
-  <title>Image Session</title>
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+  >
+
+  <meta name="theme-color" content="#07050b">
+
+  <title>Goon For Alice Game</title>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  >
+
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-  <div id="landing-page" class="modal-screen">
-    <div class="welcome-card">
-      <span class="eyebrow">GOON FOR ALICE</span>
-      <h1>Welcome GOONER</h1>
-      <p>Are you ready to goon for alice?</p>
-      <button class="primary-btn" onclick="showSettings()">YES!</button>
+  <!-- =====================================================
+       WELCOME SCREEN
+       ===================================================== -->
+
+  <div id="landing-page" class="modal-screen landing-screen">
+
+    <!-- Animated background -->
+    <div class="welcome-background" aria-hidden="true">
+
+      <div class="welcome-glow glow-one"></div>
+      <div class="welcome-glow glow-two"></div>
+      <div class="welcome-glow glow-three"></div>
+
+      <div id="floating-images" class="floating-images"></div>
+
+      <div class="noise-layer"></div>
     </div>
+
+
+    <!-- Welcome content -->
+    <div class="welcome-layout">
+
+      <div class="welcome-card">
+
+        <div class="welcome-topline">
+          <span class="status-dot"></span>
+          <span>SESSION READY</span>
+        </div>
+
+        <span class="eyebrow">GOON FOR ALICE</span>
+
+        <h1>
+          Welcome
+          <span>GOONER</span>
+        </h1>
+
+        <p class="welcome-description">
+          Are you ready for the best goon experience you have ever had?
+        </p>
+
+        <div class="welcome-preview">
+
+          <div class="preview-stat">
+            <span>IMAGES</span>
+            <strong id="welcome-image-count">—</strong>
+          </div>
+
+          <div class="preview-divider"></div>
+
+          <div class="preview-stat">
+            <span>MODE</span>
+            <strong>VISUAL</strong>
+          </div>
+
+          <div class="preview-divider"></div>
+
+          <div class="preview-stat">
+            <span>READY</span>
+            <strong>100%</strong>
+          </div>
+
+        </div>
+
+        <button
+          id="welcome-start-btn"
+          class="primary-btn welcome-start"
+          onclick="showSettings()"
+        >
+          <span>ENTER SESSION</span>
+          <span class="button-arrow">→</span>
+        </button>
+
+        <button
+          id="changelog-btn"
+          class="text-btn"
+          type="button"
+        >
+          What's new?
+        </button>
+
+      </div>
+
+
+      <!-- Changelog -->
+      <div
+        id="changelog-panel"
+        class="changelog-panel"
+      >
+
+        <div class="changelog-head">
+          <div>
+            <span class="eyebrow">UPDATE</span>
+            <h3>What's new</h3>
+          </div>
+
+          <button
+            id="changelog-close"
+            class="icon-btn"
+            type="button"
+            aria-label="Close changelog"
+          >
+            ×
+          </button>
+        </div>
+
+        <div class="changelog-list">
+
+          <div class="change-item">
+            <span class="change-number">01</span>
+
+            <div>
+              <strong>New welcome experience</strong>
+              <p>
+                A more immersive animated landing screen with
+                previews from the image collection.
+              </p>
+            </div>
+          </div>
+
+          <div class="change-item">
+            <span class="change-number">02</span>
+
+            <div>
+              <strong>Better image handling</strong>
+              <p>
+                Images now stay inside the viewer while preserving
+                their original aspect ratio.
+              </p>
+            </div>
+          </div>
+
+          <div class="change-item">
+            <span class="change-number">03</span>
+
+            <div>
+              <strong>Smoother experience</strong>
+              <p>
+                Improved transitions, HUD animations and mobile
+                layout behavior.
+              </p>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
   </div>
 
-  <div id="settings-page" class="modal-screen is-hidden">
+
+  <!-- =====================================================
+       SETTINGS
+       ===================================================== -->
+
+  <div
+    id="settings-page"
+    class="modal-screen settings-screen is-hidden"
+  >
+
     <div class="settings-card">
+
       <div class="modal-head">
+
         <div>
           <span class="eyebrow">SETUP</span>
           <h2>Session settings</h2>
+
+          <p class="settings-subtitle">
+            Configure your experience before starting.
+          </p>
         </div>
-        <button class="icon-btn" onclick="showLanding()" aria-label="Close settings">×</button>
+
+        <button
+          class="icon-btn"
+          onclick="showLanding()"
+          aria-label="Close settings"
+        >
+          ×
+        </button>
+
       </div>
 
+
       <div class="settings-list">
+
         <label class="setting-row">
+
           <span>
             <strong>Censored mode</strong>
-            <small>Apply a soft blur to the image, LOSER.</small>
+            <small>
+              Apply a soft blur to the image.
+            </small>
           </span>
-          <input type="checkbox" id="censor-check">
+
+          <input
+            type="checkbox"
+            id="censor-check"
+          >
+
         </label>
+
 
         <label class="setting-row range-row">
+
           <span>
             <strong>Blur strength</strong>
-            <small><output id="pixel-value">10</output> px</small>
+
+            <small>
+              <output id="pixel-value">10</output> px
+            </small>
           </span>
-          <input type="range" id="pixel-slider" min="0" max="20" value="10">
+
+          <input
+            type="range"
+            id="pixel-slider"
+            min="0"
+            max="20"
+            value="10"
+          >
+
         </label>
 
+
         <label class="setting-row">
+
           <span>
             <strong>Image interval</strong>
-            <small>How often the image changes.</small>
+
+            <small>
+              How often the image changes.
+            </small>
           </span>
+
           <select id="speed-input">
+
             <option value="1000">1 sec</option>
             <option value="2500">2.5 sec</option>
             <option value="4000">4 sec</option>
             <option value="5000" selected>5 sec</option>
             <option value="7000">7 sec</option>
             <option value="10000">10 sec</option>
+
           </select>
+
         </label>
 
+
         <label class="setting-row">
+
           <span>
             <strong>Difficulty</strong>
-            <small>Controls the session pace.</small>
+
+            <small>
+              Controls the session pace.
+            </small>
           </span>
+
           <select id="difficulty-select">
+
             <option value="easy">Easy</option>
             <option value="medium" selected>Medium</option>
             <option value="hard">Hard</option>
             <option value="extreme">Extreme 🥵</option>
+
           </select>
+
         </label>
 
+
         <label class="setting-row">
+
           <span>
             <strong>Music</strong>
-            <small>Play some nice background audio 🥵.</small>
+
+            <small>
+              Play background audio.
+            </small>
           </span>
-          <input type="checkbox" id="bg-toggle">
+
+          <input
+            type="checkbox"
+            id="bg-toggle"
+          >
+
         </label>
+
 
         <label class="setting-row">
+
           <span>
             <strong>Metronome</strong>
-            <small>Visual and click feedback.</small>
+
+            <small>
+              Visual and click feedback.
+            </small>
           </span>
-          <input type="checkbox" id="metro-toggle" checked>
+
+          <input
+            type="checkbox"
+            id="metro-toggle"
+            checked
+          >
+
         </label>
+
       </div>
 
-      <button id="start-session-btn" class="primary-btn">Start session</button>
+
+      <button
+        id="start-session-btn"
+        class="primary-btn"
+      >
+        <span>Start session</span>
+        <span class="button-arrow">→</span>
+      </button>
+
     </div>
+
   </div>
 
-  <main id="session" class="session is-hidden">
-    <section class="viewer" id="viewer">
+
+  <!-- =====================================================
+       SESSION
+       ===================================================== -->
+
+  <main
+    id="session"
+    class="session is-hidden"
+  >
+
+    <section
+      class="viewer"
+      id="viewer"
+    >
+
+      <!-- IMAGE -->
       <div class="image-wrap">
-        <img id="main-image" alt="Session image">
+
+        <div
+          class="image-glow"
+          aria-hidden="true"
+        ></div>
+
+        <img
+          id="main-image"
+          alt="Session image"
+          draggable="false"
+        >
+
       </div>
 
-      <div id="beat-flash" aria-hidden="true"></div>
-      <div class="image-shade" aria-hidden="true"></div>
 
+      <div
+        id="beat-flash"
+        aria-hidden="true"
+      ></div>
+
+
+      <div
+        class="image-shade"
+        aria-hidden="true"
+      ></div>
+
+
+      <!-- TOP HUD -->
       <header class="hud top-hud">
+
         <div class="brand">
+
           <span class="brand-mark"></span>
+
           <span>SESSION</span>
+
         </div>
+
 
         <div class="top-actions">
-          <button id="music-btn" class="hud-btn" aria-label="Toggle music">♫</button>
-          <button id="metro-btn" class="hud-btn is-active" aria-label="Toggle metronome">◉</button>
-          <button id="settings-btn" class="hud-btn" aria-label="Open settings">☰</button>
+
+          <button
+            id="music-btn"
+            class="hud-btn"
+            aria-label="Toggle music"
+          >
+            ♫
+          </button>
+
+          <button
+            id="metro-btn"
+            class="hud-btn is-active"
+            aria-label="Toggle metronome"
+          >
+            ◉
+          </button>
+
+          <button
+            id="settings-btn"
+            class="hud-btn"
+            aria-label="Open settings"
+          >
+            ☰
+          </button>
+
         </div>
+
       </header>
 
+
+      <!-- BOTTOM HUD -->
       <div class="hud bottom-hud">
+
         <div class="stats">
+
           <div class="stat">
             <span>BPM</span>
             <strong id="bpm-display">000</strong>
           </div>
+
           <div class="stat">
             <span>STAGE</span>
             <strong id="stage-display">0</strong>
           </div>
+
         </div>
+
 
         <div class="controls">
-          <button id="edge-btn" class="ghost-btn">Focus</button>
-          <button id="end-btn" class="ghost-btn">End</button>
+
+          <button
+            id="edge-btn"
+            class="ghost-btn"
+          >
+            Focus
+          </button>
+
+          <button
+            id="end-btn"
+            class="ghost-btn"
+          >
+            End
+          </button>
+
         </div>
+
       </div>
 
-      <div id="session-progress" class="progress"></div>
+
+      <div
+        id="session-progress"
+        class="progress"
+      ></div>
+
     </section>
+
   </main>
 
-  <audio id="click-sound" src="click.mp3" preload="auto"></audio>
+
+  <!-- AUDIO -->
+
+  <audio
+    id="click-sound"
+    src="click.mp3"
+    preload="auto"
+  ></audio>
+
 
   <script src="script.js"></script>
+
 </body>
 </html>
