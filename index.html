@@ -2,15 +2,12 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
-  >
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <meta name="theme-color" content="#07050b">
+  <meta name="color-scheme" content="dark">
 
-  <title>Goon For Alice Game</title>
+  <title>Alice Delish Goon Game</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -26,165 +23,137 @@
 <body>
 
   <!-- =====================================================
-       WELCOME SCREEN
-       ===================================================== -->
+       LANDING PAGE
+  ====================================================== -->
 
-  <div id="landing-page" class="modal-screen landing-screen">
+  <div id="landing-page" class="landing-page">
 
-    <!-- Animated background -->
-    <div class="welcome-background" aria-hidden="true">
+    <!-- Ambient background -->
+    <div class="landing-glow landing-glow-one"></div>
+    <div class="landing-glow landing-glow-two"></div>
 
-      <div class="welcome-glow glow-one"></div>
-      <div class="welcome-glow glow-two"></div>
-      <div class="welcome-glow glow-three"></div>
+    <!-- LEFT PREVIEW RAIL -->
+    <aside class="preview-rail preview-left" aria-hidden="true">
+      <div id="preview-left-track" class="preview-track">
+        <!-- JS inserts images -->
+      </div>
+    </aside>
 
-      <div id="floating-images" class="floating-images"></div>
+    <!-- RIGHT PREVIEW RAIL -->
+    <aside class="preview-rail preview-right" aria-hidden="true">
+      <div id="preview-right-track" class="preview-track">
+        <!-- JS inserts images -->
+      </div>
+    </aside>
 
-      <div class="noise-layer"></div>
-    </div>
+    <!-- Dark side fade -->
+    <div class="landing-vignette"></div>
 
+    <!-- Main landing content -->
+    <main class="landing-center">
 
-    <!-- Welcome content -->
-    <div class="welcome-layout">
+      <div class="landing-badge">
+        <span class="live-dot"></span>
+        <span>GOON SESSION</span>
+      </div>
 
-      <div class="welcome-card">
+      <div class="hero-title-wrap">
 
-        <div class="welcome-topline">
-          <span class="status-dot"></span>
-          <span>SESSION READY</span>
-        </div>
-
-        <span class="eyebrow">GOON FOR ALICE</span>
+        <span class="hero-eyebrow">
+          GOON FOR ALICE
+        </span>
 
         <h1>
           Welcome
           <span>GOONER</span>
         </h1>
 
-        <p class="welcome-description">
-          Are you ready for the best goon experience you have ever had?
+        <p class="hero-description">
+          Are you ready for the best goon experience?
         </p>
-
-        <div class="welcome-preview">
-
-          <div class="preview-stat">
-            <span>IMAGES</span>
-            <strong id="welcome-image-count">—</strong>
-          </div>
-
-          <div class="preview-divider"></div>
-
-          <div class="preview-stat">
-            <span>MODE</span>
-            <strong>VISUAL</strong>
-          </div>
-
-          <div class="preview-divider"></div>
-
-          <div class="preview-stat">
-            <span>READY</span>
-            <strong>100%</strong>
-          </div>
-
-        </div>
-
-        <button
-          id="welcome-start-btn"
-          class="primary-btn welcome-start"
-          onclick="showSettings()"
-        >
-          <span>ENTER SESSION</span>
-          <span class="button-arrow">→</span>
-        </button>
-
-        <button
-          id="changelog-btn"
-          class="text-btn"
-          type="button"
-        >
-          What's new?
-        </button>
 
       </div>
 
+      <!-- Image count -->
+      <div class="library-status">
+
+        <div class="library-status-icon">
+          ◈
+        </div>
+
+        <div class="library-status-text">
+          <strong id="landing-image-count">
+            Loading…
+          </strong>
+
+          <span id="landing-image-status">
+            Preparing image library
+          </span>
+        </div>
+
+      </div>
+
+      <!-- Main CTA -->
+      <button
+        id="enter-session-btn"
+        class="primary-btn landing-btn"
+        type="button"
+        disabled
+      >
+        <span>Loading library…</span>
+        <span class="btn-arrow">→</span>
+      </button>
 
       <!-- Changelog -->
-      <div
-        id="changelog-panel"
-        class="changelog-panel"
-      >
+      <section class="changelog">
 
-        <div class="changelog-head">
-          <div>
-            <span class="eyebrow">UPDATE</span>
-            <h3>What's new</h3>
-          </div>
-
-          <button
-            id="changelog-close"
-            class="icon-btn"
-            type="button"
-            aria-label="Close changelog"
-          >
-            ×
-          </button>
+        <div class="changelog-header">
+          <span class="eyebrow">LATEST UPDATE</span>
+          <span class="version">v2.0</span>
         </div>
 
         <div class="changelog-list">
 
           <div class="change-item">
-            <span class="change-number">01</span>
-
-            <div>
-              <strong>New welcome experience</strong>
-              <p>
-                A more immersive animated landing screen with
-                previews from the image collection.
-              </p>
-            </div>
+            <span class="change-dot"></span>
+            <span>New cinematic landing screen</span>
           </div>
 
           <div class="change-item">
-            <span class="change-number">02</span>
-
-            <div>
-              <strong>Better image handling</strong>
-              <p>
-                Images now stay inside the viewer while preserving
-                their original aspect ratio.
-              </p>
-            </div>
+            <span class="change-dot"></span>
+            <span>Live image library counter</span>
           </div>
 
           <div class="change-item">
-            <span class="change-number">03</span>
+            <span class="change-dot"></span>
+            <span>Scrolling image preview walls</span>
+          </div>
 
-            <div>
-              <strong>Smoother experience</strong>
-              <p>
-                Improved transitions, HUD animations and mobile
-                layout behavior.
-              </p>
-            </div>
+          <div class="change-item">
+            <span class="change-dot"></span>
+            <span>Improved image aspect handling</span>
           </div>
 
         </div>
 
+      </section>
+
+      <div class="landing-footer">
+        <span>IMAGE SESSION</span>
+        <span class="footer-separator">•</span>
+        <span>READY WHEN YOU ARE</span>
       </div>
 
-    </div>
+    </main>
 
   </div>
 
 
   <!-- =====================================================
        SETTINGS
-       ===================================================== -->
+  ====================================================== -->
 
-  <div
-    id="settings-page"
-    class="modal-screen settings-screen is-hidden"
-  >
+  <div id="settings-page" class="modal-screen is-hidden">
 
     <div class="settings-card">
 
@@ -193,15 +162,12 @@
         <div>
           <span class="eyebrow">SETUP</span>
           <h2>Session settings</h2>
-
-          <p class="settings-subtitle">
-            Configure your experience before starting.
-          </p>
         </div>
 
         <button
+          id="close-settings-btn"
           class="icon-btn"
-          onclick="showLanding()"
+          type="button"
           aria-label="Close settings"
         >
           ×
@@ -216,9 +182,7 @@
 
           <span>
             <strong>Censored mode</strong>
-            <small>
-              Apply a soft blur to the image.
-            </small>
+            <small>Apply a soft blur to the image.</small>
           </span>
 
           <input
@@ -229,7 +193,7 @@
         </label>
 
 
-        <label class="setting-row range-row">
+        <label class="setting-row">
 
           <span>
             <strong>Blur strength</strong>
@@ -254,20 +218,37 @@
 
           <span>
             <strong>Image interval</strong>
-
-            <small>
-              How often the image changes.
-            </small>
+            <small>How often the image changes.</small>
           </span>
 
           <select id="speed-input">
 
-            <option value="1000">1 sec</option>
-            <option value="2500">2.5 sec</option>
-            <option value="4000">4 sec</option>
-            <option value="5000" selected>5 sec</option>
-            <option value="7000">7 sec</option>
-            <option value="10000">10 sec</option>
+            <option value="1000">
+              1 sec
+            </option>
+
+            <option value="2500">
+              2.5 sec
+            </option>
+
+            <option value="4000">
+              4 sec
+            </option>
+
+            <option
+              value="5000"
+              selected
+            >
+              5 sec
+            </option>
+
+            <option value="7000">
+              7 sec
+            </option>
+
+            <option value="10000">
+              10 sec
+            </option>
 
           </select>
 
@@ -278,18 +259,29 @@
 
           <span>
             <strong>Difficulty</strong>
-
-            <small>
-              Controls the session pace.
-            </small>
+            <small>Controls the session pace.</small>
           </span>
 
           <select id="difficulty-select">
 
-            <option value="easy">Easy</option>
-            <option value="medium" selected>Medium</option>
-            <option value="hard">Hard</option>
-            <option value="extreme">Extreme 🥵</option>
+            <option value="easy">
+              Easy
+            </option>
+
+            <option
+              value="medium"
+              selected
+            >
+              Medium
+            </option>
+
+            <option value="hard">
+              Hard
+            </option>
+
+            <option value="extreme">
+              Extreme 🥵
+            </option>
 
           </select>
 
@@ -300,10 +292,7 @@
 
           <span>
             <strong>Music</strong>
-
-            <small>
-              Play background audio.
-            </small>
+            <small>Play background audio.</small>
           </span>
 
           <input
@@ -318,10 +307,7 @@
 
           <span>
             <strong>Metronome</strong>
-
-            <small>
-              Visual and click feedback.
-            </small>
+            <small>Visual and click feedback.</small>
           </span>
 
           <input
@@ -338,9 +324,9 @@
       <button
         id="start-session-btn"
         class="primary-btn"
+        type="button"
       >
-        <span>Start session</span>
-        <span class="button-arrow">→</span>
+        START
       </button>
 
     </div>
@@ -350,7 +336,7 @@
 
   <!-- =====================================================
        SESSION
-       ===================================================== -->
+  ====================================================== -->
 
   <main
     id="session"
@@ -362,28 +348,27 @@
       id="viewer"
     >
 
-      <!-- IMAGE -->
+      <!-- Image area -->
       <div class="image-wrap">
 
-        <div
-          class="image-glow"
-          aria-hidden="true"
-        ></div>
+        <div class="image-stage">
 
-        <img
-          id="main-image"
-          alt="Session image"
-          draggable="false"
-        >
+          <img
+            id="main-image"
+            alt="Session image"
+            draggable="false"
+          >
+
+        </div>
 
       </div>
 
 
+      <!-- Effects -->
       <div
         id="beat-flash"
         aria-hidden="true"
       ></div>
-
 
       <div
         class="image-shade"
@@ -398,7 +383,9 @@
 
           <span class="brand-mark"></span>
 
-          <span>SESSION</span>
+          <span>
+            SESSION
+          </span>
 
         </div>
 
@@ -408,6 +395,7 @@
           <button
             id="music-btn"
             class="hud-btn"
+            type="button"
             aria-label="Toggle music"
           >
             ♫
@@ -416,6 +404,7 @@
           <button
             id="metro-btn"
             class="hud-btn is-active"
+            type="button"
             aria-label="Toggle metronome"
           >
             ◉
@@ -424,6 +413,7 @@
           <button
             id="settings-btn"
             class="hud-btn"
+            type="button"
             aria-label="Open settings"
           >
             ☰
@@ -440,13 +430,41 @@
         <div class="stats">
 
           <div class="stat">
-            <span>BPM</span>
-            <strong id="bpm-display">000</strong>
+
+            <span>
+              IMAGES
+            </span>
+
+            <strong id="image-count-display">
+              0
+            </strong>
+
           </div>
 
+
           <div class="stat">
-            <span>STAGE</span>
-            <strong id="stage-display">0</strong>
+
+            <span>
+              BPM
+            </span>
+
+            <strong id="bpm-display">
+              000
+            </strong>
+
+          </div>
+
+
+          <div class="stat">
+
+            <span>
+              STAGE
+            </span>
+
+            <strong id="stage-display">
+              0
+            </strong>
+
           </div>
 
         </div>
@@ -457,6 +475,7 @@
           <button
             id="edge-btn"
             class="ghost-btn"
+            type="button"
           >
             Focus
           </button>
@@ -464,6 +483,7 @@
           <button
             id="end-btn"
             class="ghost-btn"
+            type="button"
           >
             End
           </button>
@@ -473,6 +493,7 @@
       </div>
 
 
+      <!-- Progress -->
       <div
         id="session-progress"
         class="progress"
