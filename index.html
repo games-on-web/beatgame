@@ -3,171 +3,1523 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <meta name="theme-color" content="#07050b">
-  <meta name="color-scheme" content="dark">
 
-  <title>Alice Delish Goon Game</title>
+  <title>Image Session</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
   <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
     rel="stylesheet"
   >
 
-  <link rel="stylesheet" href="style.css">
+  <style>
+    :root {
+      --bg: #07050b;
+      --bg-2: #0d0814;
+
+      --panel: rgba(20, 14, 28, .82);
+      --panel-strong: rgba(17, 11, 25, .94);
+
+      --line: rgba(255, 255, 255, .11);
+      --line-bright: rgba(199, 125, 255, .30);
+
+      --text: #faf7ff;
+      --muted: rgba(255, 255, 255, .58);
+
+      --accent: #c77dff;
+      --accent-2: #7c5cff;
+      --accent-3: #ff5fa2;
+
+      --accent-soft: rgba(199, 125, 255, .14);
+
+      --shadow:
+        0 30px 100px rgba(0, 0, 0, .55);
+
+      --ease: cubic-bezier(.22, 1, .36, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      width: 100%;
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, system-ui, sans-serif;
+    }
+
+    body {
+      overflow: hidden;
+
+      background:
+        radial-gradient(
+          circle at 15% 20%,
+          rgba(199, 125, 255, .17),
+          transparent 30%
+        ),
+        radial-gradient(
+          circle at 85% 75%,
+          rgba(255, 95, 162, .13),
+          transparent 30%
+        ),
+        radial-gradient(
+          circle at 50% 110%,
+          rgba(124, 92, 255, .14),
+          transparent 35%
+        ),
+        #07050b;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .is-hidden {
+      display: none !important;
+    }
+
+    /* =========================================================
+       LANDING
+       ========================================================= */
+
+    .landing {
+      position: fixed;
+      inset: 0;
+
+      overflow: hidden;
+
+      display: grid;
+      place-items: center;
+
+      isolation: isolate;
+    }
+
+    /* Animated ambient lights */
+
+    .ambient {
+      position: absolute;
+      inset: -30%;
+
+      pointer-events: none;
+
+      background:
+        radial-gradient(
+          circle at 25% 45%,
+          rgba(199, 125, 255, .16),
+          transparent 18%
+        ),
+        radial-gradient(
+          circle at 75% 55%,
+          rgba(255, 95, 162, .12),
+          transparent 18%
+        );
+
+      filter: blur(50px);
+
+      animation:
+        ambientMove 14s ease-in-out infinite alternate;
+    }
+
+    @keyframes ambientMove {
+      from {
+        transform: translate3d(-2%, -1%, 0) scale(1);
+      }
+
+      to {
+        transform: translate3d(2%, 2%, 0) scale(1.08);
+      }
+    }
+
+    /* Grain */
+
+    .grain {
+      position: absolute;
+      inset: 0;
+
+      z-index: 20;
+
+      pointer-events: none;
+
+      opacity: .055;
+
+      background-image:
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.8'/%3E%3C/svg%3E");
+
+      mix-blend-mode: overlay;
+    }
+
+    /* =========================================================
+       SIDE IMAGE STREAMS
+       ========================================================= */
+
+    .preview-column {
+      position: absolute;
+      top: -10%;
+      bottom: -10%;
+
+      width: min(25vw, 360px);
+
+      overflow: hidden;
+
+      opacity: .72;
+
+      z-index: 1;
+
+      mask-image:
+        linear-gradient(
+          to bottom,
+          transparent 0%,
+          black 10%,
+          black 90%,
+          transparent 100%
+        );
+
+      -webkit-mask-image:
+        linear-gradient(
+          to bottom,
+          transparent 0%,
+          black 10%,
+          black 90%,
+          transparent 100%
+        );
+    }
+
+    .preview-column.left {
+      left: 1.5%;
+    }
+
+    .preview-column.right {
+      right: 1.5%;
+    }
+
+    .preview-track {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+
+      will-change: transform;
+    }
+
+    .preview-column.left .preview-track {
+      animation: scrollPreviewLeft 38s linear infinite;
+    }
+
+    .preview-column.right .preview-track {
+      animation: scrollPreviewRight 44s linear infinite;
+    }
+
+    @keyframes scrollPreviewLeft {
+      from {
+        transform: translateY(0);
+      }
+
+      to {
+        transform: translateY(-50%);
+      }
+    }
+
+    @keyframes scrollPreviewRight {
+      from {
+        transform: translateY(-50%);
+      }
+
+      to {
+        transform: translateY(0);
+      }
+    }
+
+    .preview-card {
+      position: relative;
+
+      width: 100%;
+      height: clamp(170px, 20vw, 280px);
+
+      flex: 0 0 auto;
+
+      overflow: hidden;
+
+      border: 1px solid rgba(255, 255, 255, .10);
+      border-radius: 18px;
+
+      background: rgba(15, 10, 22, .75);
+
+      box-shadow:
+        0 20px 60px rgba(0, 0, 0, .35);
+
+      transform: translateZ(0);
+    }
+
+    .preview-card::after {
+      content: "";
+
+      position: absolute;
+      inset: 0;
+
+      background:
+        linear-gradient(
+          180deg,
+          rgba(0, 0, 0, .04),
+          rgba(0, 0, 0, .30)
+        );
+
+      pointer-events: none;
+    }
+
+    .preview-card img {
+      width: 100%;
+      height: 100%;
+
+      display: block;
+
+      object-fit: cover;
+      object-position: center;
+
+      opacity: .78;
+
+      transform: scale(1.02);
+
+      transition:
+        transform 1s var(--ease),
+        opacity .6s ease;
+    }
+
+    .preview-card:hover img {
+      transform: scale(1.07);
+      opacity: 1;
+    }
+
+    /* Dark fade over the sides */
+
+    .side-fade {
+      position: absolute;
+      inset: 0;
+
+      z-index: 3;
+
+      pointer-events: none;
+
+      background:
+        linear-gradient(
+          90deg,
+          var(--bg) 0%,
+          transparent 18%,
+          transparent 82%,
+          var(--bg) 100%
+        );
+    }
+
+    /* =========================================================
+       WELCOME CARD
+       ========================================================= */
+
+    .landing-center {
+      position: relative;
+
+      z-index: 10;
+
+      width: min(560px, calc(100vw - 40px));
+
+      text-align: center;
+
+      animation:
+        landingEnter 1s var(--ease) both;
+    }
+
+    @keyframes landingEnter {
+      from {
+        opacity: 0;
+        transform: translateY(25px) scale(.97);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .welcome-card {
+      position: relative;
+
+      padding: clamp(34px, 6vw, 58px);
+
+      border: 1px solid rgba(199, 125, 255, .20);
+
+      border-radius: 30px;
+
+      background:
+        linear-gradient(
+          145deg,
+          rgba(30, 20, 43, .91),
+          rgba(11, 8, 17, .94)
+        );
+
+      box-shadow:
+        0 35px 100px rgba(0, 0, 0, .62),
+        0 0 90px rgba(124, 92, 255, .10);
+
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
+    }
+
+    .welcome-card::before {
+      content: "";
+
+      position: absolute;
+      inset: 1px;
+
+      border-radius: 29px;
+
+      pointer-events: none;
+
+      background:
+        linear-gradient(
+          135deg,
+          rgba(255, 255, 255, .07),
+          transparent 30%,
+          transparent 70%,
+          rgba(199, 125, 255, .05)
+        );
+    }
+
+    .welcome-card::after {
+      content: "";
+
+      position: absolute;
+
+      width: 180px;
+      height: 180px;
+
+      top: -90px;
+      left: 50%;
+
+      transform: translateX(-50%);
+
+      border-radius: 50%;
+
+      background:
+        radial-gradient(
+          circle,
+          rgba(199, 125, 255, .22),
+          transparent 70%
+        );
+
+      filter: blur(25px);
+
+      pointer-events: none;
+    }
+
+    .eyebrow {
+      position: relative;
+      z-index: 2;
+
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+
+      margin-bottom: 17px;
+
+      color: var(--accent);
+
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: .25em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      content: "";
+
+      width: 6px;
+      height: 6px;
+
+      border-radius: 50%;
+
+      background: var(--accent);
+
+      box-shadow:
+        0 0 16px var(--accent);
+    }
+
+    .welcome-card h1 {
+      position: relative;
+      z-index: 2;
+
+      font-size: clamp(42px, 7vw, 72px);
+
+      line-height: .94;
+
+      letter-spacing: -.07em;
+    }
+
+    .gradient-text {
+      display: block;
+
+      background:
+        linear-gradient(
+          110deg,
+          #fff,
+          #e6ccff 40%,
+          #c77dff 70%,
+          #ff8fbd
+        );
+
+      -webkit-background-clip: text;
+      background-clip: text;
+
+      color: transparent;
+    }
+
+    .welcome-description {
+      position: relative;
+      z-index: 2;
+
+      max-width: 390px;
+
+      margin: 22px auto 28px;
+
+      color: var(--muted);
+
+      font-size: 14px;
+      line-height: 1.75;
+    }
+
+    /* =========================================================
+       LIVE STATS
+       ========================================================= */
+
+    .landing-stats {
+      position: relative;
+      z-index: 2;
+
+      display: flex;
+      justify-content: center;
+      gap: 9px;
+
+      margin-bottom: 25px;
+    }
+
+    .landing-stat {
+      min-width: 115px;
+
+      padding: 10px 14px;
+
+      border: 1px solid rgba(255, 255, 255, .08);
+      border-radius: 12px;
+
+      background: rgba(255, 255, 255, .035);
+    }
+
+    .landing-stat span {
+      display: block;
+
+      margin-bottom: 3px;
+
+      color: var(--muted);
+
+      font-size: 8px;
+      font-weight: 700;
+      letter-spacing: .16em;
+    }
+
+    .landing-stat strong {
+      font-size: 13px;
+    }
+
+    /* =========================================================
+       PRIMARY BUTTON
+       ========================================================= */
+
+    .primary-btn {
+      position: relative;
+      z-index: 2;
+
+      width: 100%;
+      min-height: 56px;
+
+      border: 0;
+      border-radius: 15px;
+
+      background:
+        linear-gradient(
+          135deg,
+          var(--accent),
+          var(--accent-2) 55%,
+          #a66cff
+        );
+
+      color: #fff;
+
+      font-size: 13px;
+      font-weight: 900;
+
+      letter-spacing: .02em;
+
+      box-shadow:
+        0 14px 40px rgba(124, 92, 255, .27);
+
+      transition:
+        transform .25s var(--ease),
+        box-shadow .25s ease,
+        filter .25s ease;
+    }
+
+    .primary-btn::before {
+      content: "";
+
+      position: absolute;
+      inset: 1px;
+
+      border-radius: 14px;
+
+      background:
+        linear-gradient(
+          110deg,
+          transparent 20%,
+          rgba(255, 255, 255, .22),
+          transparent 45%
+        );
+
+      transform: translateX(-130%);
+
+      transition: transform .7s ease;
+    }
+
+    .primary-btn:hover {
+      transform: translateY(-3px);
+
+      filter: brightness(1.08);
+
+      box-shadow:
+        0 18px 55px rgba(124, 92, 255, .38);
+    }
+
+    .primary-btn:hover::before {
+      transform: translateX(130%);
+    }
+
+    .primary-btn:active {
+      transform: translateY(-1px) scale(.99);
+    }
+
+    /* =========================================================
+       CHANGELOG
+       ========================================================= */
+
+    .changelog {
+      position: relative;
+      z-index: 2;
+
+      display: flex;
+      justify-content: center;
+      gap: 18px;
+
+      margin-top: 19px;
+
+      color: rgba(255,255,255,.40);
+
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .changelog span {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .changelog i {
+      width: 4px;
+      height: 4px;
+
+      border-radius: 50%;
+
+      background: var(--accent);
+    }
+
+    /* =========================================================
+       SETTINGS
+       ========================================================= */
+
+    .modal-screen {
+      position: fixed;
+      inset: 0;
+
+      z-index: 100;
+
+      display: grid;
+      place-items: center;
+
+      padding: 20px;
+
+      background:
+        radial-gradient(
+          circle at 50% 20%,
+          rgba(199, 125, 255, .16),
+          transparent 35%
+        ),
+        rgba(4, 3, 7, .92);
+
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+
+    .settings-card {
+      width: min(100%, 500px);
+
+      max-height: calc(100vh - 40px);
+
+      overflow: auto;
+
+      padding: 30px;
+
+      border: 1px solid rgba(199, 125, 255, .22);
+      border-radius: 25px;
+
+      background:
+        linear-gradient(
+          145deg,
+          rgba(34, 24, 48, .96),
+          rgba(15, 11, 22, .97)
+        );
+
+      box-shadow: var(--shadow);
+    }
+
+    .modal-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+
+      margin-bottom: 25px;
+    }
+
+    .modal-head h2 {
+      font-size: 27px;
+      letter-spacing: -.045em;
+    }
+
+    .icon-btn {
+      width: 38px;
+      height: 38px;
+
+      border: 1px solid var(--line);
+      border-radius: 50%;
+
+      background: rgba(255, 255, 255, .04);
+
+      color: var(--text);
+
+      font-size: 23px;
+
+      transition: .2s ease;
+    }
+
+    .icon-btn:hover {
+      background: var(--accent-soft);
+      border-color: var(--line-bright);
+      transform: rotate(5deg);
+    }
+
+    .settings-list {
+      display: grid;
+      gap: 2px;
+
+      margin-bottom: 22px;
+    }
+
+    .setting-row {
+      display: grid;
+
+      grid-template-columns: 1fr auto;
+
+      gap: 20px;
+
+      align-items: center;
+
+      min-height: 70px;
+
+      padding: 12px 0;
+
+      border-bottom: 1px solid rgba(255, 255, 255, .07);
+    }
+
+    .setting-row:last-child {
+      border-bottom: 0;
+    }
+
+    .setting-row strong,
+    .setting-row small {
+      display: block;
+    }
+
+    .setting-row strong {
+      font-size: 13px;
+    }
+
+    .setting-row small {
+      margin-top: 5px;
+
+      color: var(--muted);
+
+      font-size: 11px;
+      line-height: 1.4;
+    }
+
+    select {
+      min-width: 105px;
+
+      padding: 9px 11px;
+
+      border: 1px solid var(--line);
+      border-radius: 10px;
+
+      outline: 0;
+
+      background: #110c18;
+      color: var(--text);
+    }
+
+    input[type="range"] {
+      width: 140px;
+
+      accent-color: var(--accent);
+    }
+
+    input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+
+      accent-color: var(--accent);
+    }
+
+    /* =========================================================
+       SESSION / VIEWER
+       ========================================================= */
+
+    .session,
+    .viewer {
+      width: 100%;
+      height: 100dvh;
+    }
+
+    .viewer {
+      position: relative;
+
+      display: grid;
+      place-items: center;
+
+      overflow: hidden;
+
+      background:
+        radial-gradient(
+          ellipse at center,
+          rgba(199, 125, 255, .20),
+          transparent 42%
+        ),
+        radial-gradient(
+          ellipse at 20% 80%,
+          rgba(255, 95, 162, .14),
+          transparent 35%
+        ),
+        radial-gradient(
+          ellipse at 85% 20%,
+          rgba(124, 92, 255, .16),
+          transparent 35%
+        ),
+        #08060d;
+    }
+
+    /*
+      THIS is the important image container.
+
+      The image is constrained by the available viewport.
+      It will never be stretched.
+      It will never exceed the viewport.
+    */
+
+    .image-wrap {
+      position: absolute;
+
+      inset: 0;
+
+      display: grid;
+      place-items: center;
+
+      /*
+        Leave room for the top and bottom HUD.
+      */
+      padding:
+        72px
+        30px
+        100px;
+
+      z-index: 1;
+    }
+
+    #main-image {
+      position: relative;
+
+      display: block;
+
+      /*
+        Critical:
+        preserve natural aspect ratio.
+      */
+      width: auto;
+      height: auto;
+
+      max-width: 100%;
+      max-height: 100%;
+
+      object-fit: contain;
+      object-position: center;
+
+      /*
+        Prevent bizarre layout before image dimensions load.
+      */
+      min-width: 0;
+      min-height: 0;
+
+      border-radius: 12px;
+
+      user-select: none;
+      -webkit-user-drag: none;
+
+      box-shadow:
+        0 25px 90px rgba(0, 0, 0, .60),
+        0 0 50px rgba(124, 92, 255, .12);
+
+      transform-origin: center center;
+
+      transition:
+        transform .08s ease-out,
+        filter .25s ease,
+        opacity .25s ease;
+    }
+
+    .image-wrap::before {
+      content: "";
+
+      position: absolute;
+
+      width: min(70vw, 850px);
+      height: min(70vh, 650px);
+
+      border-radius: 50%;
+
+      background:
+        radial-gradient(
+          circle,
+          rgba(199, 125, 255, .20),
+          rgba(124, 92, 255, .08) 35%,
+          transparent 70%
+        );
+
+      filter: blur(50px);
+
+      pointer-events: none;
+    }
+
+    .image-shade {
+      position: absolute;
+      inset: 0;
+
+      z-index: 3;
+
+      pointer-events: none;
+
+      background:
+        radial-gradient(
+          ellipse at center,
+          transparent 50%,
+          rgba(0, 0, 0, .30) 100%
+        );
+    }
+
+    #beat-flash {
+      position: absolute;
+      inset: 0;
+
+      z-index: 4;
+
+      pointer-events: none;
+
+      background:
+        radial-gradient(
+          circle at center,
+          rgba(199, 125, 255, .30),
+          rgba(255, 95, 162, .08),
+          transparent 70%
+        );
+
+      opacity: 0;
+
+      transition: opacity .05s linear;
+    }
+
+    /* =========================================================
+       HUD
+       ========================================================= */
+
+    .hud {
+      position: absolute;
+
+      z-index: 10;
+
+      left: 20px;
+      right: 20px;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      pointer-events: none;
+
+      transition:
+        opacity .35s ease,
+        transform .35s ease;
+    }
+
+    .hud > * {
+      pointer-events: auto;
+    }
+
+    .top-hud {
+      top: 20px;
+    }
+
+    .bottom-hud {
+      bottom: 20px;
+
+      align-items: flex-end;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+
+      padding: 10px 13px;
+
+      border: 1px solid rgba(199, 125, 255, .20);
+      border-radius: 999px;
+
+      background: rgba(10, 7, 15, .55);
+
+      backdrop-filter: blur(14px);
+
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: .18em;
+
+      box-shadow:
+        0 8px 30px rgba(0, 0, 0, .2);
+    }
+
+    .brand-mark {
+      width: 7px;
+      height: 7px;
+
+      border-radius: 50%;
+
+      background: var(--accent);
+
+      box-shadow:
+        0 0 14px rgba(199, 125, 255, .9);
+    }
+
+    .top-actions,
+    .controls,
+    .stats {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .hud-btn,
+    .ghost-btn {
+      border: 1px solid rgba(255, 255, 255, .13);
+
+      color: var(--text);
+
+      background: rgba(10, 7, 15, .55);
+
+      backdrop-filter: blur(14px);
+
+      transition:
+        background .2s ease,
+        border-color .2s ease,
+        transform .2s ease,
+        box-shadow .2s ease;
+    }
+
+    .hud-btn {
+      width: 38px;
+      height: 38px;
+
+      border-radius: 50%;
+
+      font-size: 15px;
+    }
+
+    .hud-btn:hover,
+    .ghost-btn:hover {
+      background: rgba(199, 125, 255, .16);
+
+      border-color: rgba(199, 125, 255, .40);
+
+      transform: translateY(-1px);
+    }
+
+    .hud-btn.is-active {
+      background:
+        linear-gradient(
+          135deg,
+          rgba(199, 125, 255, .28),
+          rgba(124, 92, 255, .22)
+        );
+
+      border-color: rgba(199, 125, 255, .40);
+
+      box-shadow:
+        0 0 20px rgba(124, 92, 255, .12);
+    }
+
+    .stats {
+      gap: 22px;
+
+      padding: 11px 15px;
+
+      border: 1px solid rgba(199, 125, 255, .18);
+      border-radius: 14px;
+
+      background: rgba(8, 6, 12, .55);
+
+      backdrop-filter: blur(14px);
+    }
+
+    .stat span {
+      display: block;
+
+      margin-bottom: 3px;
+
+      color: var(--muted);
+
+      font-size: 8px;
+      font-weight: 700;
+      letter-spacing: .16em;
+    }
+
+    .stat strong {
+      color: var(--accent);
+
+      font-size: 19px;
+      letter-spacing: -.04em;
+
+      text-shadow:
+        0 0 18px rgba(199, 125, 255, .35);
+    }
+
+    .ghost-btn {
+      min-width: 74px;
+      min-height: 40px;
+
+      padding: 0 15px;
+
+      border-radius: 999px;
+
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    #edge-btn.is-active {
+      background:
+        linear-gradient(
+          135deg,
+          var(--accent),
+          var(--accent-2)
+        );
+
+      color: #fff;
+
+      border-color: transparent;
+
+      box-shadow:
+        0 8px 24px rgba(124, 92, 255, .25);
+    }
+
+    /* =========================================================
+       PROGRESS
+       ========================================================= */
+
+    .progress {
+      position: absolute;
+
+      z-index: 12;
+
+      right: 0;
+      bottom: 0;
+      left: 0;
+
+      height: 3px;
+
+      transform-origin: left;
+      transform: scaleX(0);
+
+      background:
+        linear-gradient(
+          90deg,
+          var(--accent-3),
+          var(--accent),
+          var(--accent-2)
+        );
+
+      box-shadow:
+        0 0 15px rgba(199, 125, 255, .45);
+    }
+
+    .viewer.clean .hud {
+      opacity: .18;
+    }
+
+    .viewer.clean:hover .hud,
+    .viewer.clean:focus-within .hud {
+      opacity: 1;
+    }
+
+    /* =========================================================
+       LOADING
+       ========================================================= */
+
+    .loading {
+      position: fixed;
+      inset: 0;
+
+      z-index: 500;
+
+      display: grid;
+      place-items: center;
+
+      background: #07050b;
+
+      transition:
+        opacity .5s ease,
+        visibility .5s ease;
+    }
+
+    .loading.done {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .loader-inner {
+      text-align: center;
+    }
+
+    .loader-orb {
+      width: 42px;
+      height: 42px;
+
+      margin: 0 auto 16px;
+
+      border: 2px solid rgba(255,255,255,.08);
+      border-top-color: var(--accent);
+
+      border-radius: 50%;
+
+      animation: spin .8s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .loader-text {
+      color: var(--muted);
+
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+    }
+
+    /* =========================================================
+       MOBILE
+       ========================================================= */
+
+    @media (max-width: 800px) {
+      .preview-column {
+        width: 31vw;
+
+        opacity: .38;
+      }
+
+      .preview-column.left {
+        left: -9%;
+      }
+
+      .preview-column.right {
+        right: -9%;
+      }
+
+      .landing-center {
+        width: min(520px, calc(100vw - 32px));
+      }
+
+      .welcome-card {
+        padding: 35px 25px;
+      }
+
+      .welcome-card h1 {
+        font-size: clamp(39px, 12vw, 58px);
+      }
+
+      .landing-stats {
+        gap: 6px;
+      }
+
+      .landing-stat {
+        min-width: 0;
+        flex: 1;
+      }
+
+      .image-wrap {
+        padding:
+          68px
+          12px
+          105px;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .changelog {
+        gap: 9px;
+        font-size: 8px;
+      }
+
+      .changelog span:nth-child(2) {
+        display: none;
+      }
+
+      .preview-column {
+        opacity: .24;
+      }
+
+      .hud {
+        left: 10px;
+        right: 10px;
+      }
+
+      .top-hud {
+        top: 10px;
+      }
+
+      .bottom-hud {
+        bottom: 10px;
+
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+      }
+
+      .stats,
+      .controls {
+        width: 100%;
+      }
+
+      .stats {
+        justify-content: center;
+      }
+
+      .controls {
+        justify-content: flex-end;
+      }
+
+      .settings-card {
+        padding: 22px;
+        border-radius: 20px;
+      }
+
+      .image-wrap {
+        padding:
+          62px
+          8px
+          108px;
+      }
+
+      #main-image {
+        border-radius: 8px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: .001ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: .001ms !important;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
-  <!-- =====================================================
+  <!-- ========================================================
+       LOADING
+       ========================================================= -->
+
+  <div id="loading" class="loading">
+    <div class="loader-inner">
+      <div class="loader-orb"></div>
+      <div class="loader-text">Preparing your session</div>
+    </div>
+  </div>
+
+
+  <!-- ========================================================
        LANDING PAGE
-  ====================================================== -->
+       ======================================================== -->
 
-  <div id="landing-page" class="landing-page">
+  <div id="landing-page" class="landing">
 
-    <!-- Ambient background -->
-    <div class="landing-glow landing-glow-one"></div>
-    <div class="landing-glow landing-glow-two"></div>
+    <div class="ambient"></div>
 
-    <!-- LEFT PREVIEW RAIL -->
-    <aside class="preview-rail preview-left" aria-hidden="true">
-      <div id="preview-left-track" class="preview-track">
-        <!-- JS inserts images -->
-      </div>
+    <!-- LEFT PREVIEW STREAM -->
+    <aside class="preview-column left">
+      <div id="preview-left" class="preview-track"></div>
     </aside>
 
-    <!-- RIGHT PREVIEW RAIL -->
-    <aside class="preview-rail preview-right" aria-hidden="true">
-      <div id="preview-right-track" class="preview-track">
-        <!-- JS inserts images -->
-      </div>
+    <!-- RIGHT PREVIEW STREAM -->
+    <aside class="preview-column right">
+      <div id="preview-right" class="preview-track"></div>
     </aside>
 
-    <!-- Dark side fade -->
-    <div class="landing-vignette"></div>
+    <div class="side-fade"></div>
 
-    <!-- Main landing content -->
-    <main class="landing-center">
+    <div class="grain"></div>
 
-      <div class="landing-badge">
-        <span class="live-dot"></span>
-        <span>GOON SESSION</span>
-      </div>
 
-      <div class="hero-title-wrap">
+    <!-- CENTER -->
+    <div class="landing-center">
 
-        <span class="hero-eyebrow">
+      <div class="welcome-card">
+
+        <span class="eyebrow">
           GOON FOR ALICE
         </span>
 
         <h1>
-          Welcome
-          <span>GOONER</span>
+          Ready for
+          <span class="gradient-text">
+            the goon session?
+          </span>
         </h1>
 
-        <p class="hero-description">
-          Are you ready for the best goon experience?
+        <p class="welcome-description">
+          The best free GOONING experience, you will get addicted.
         </p>
 
-      </div>
 
-      <!-- Image count -->
-      <div class="library-status">
+        <!-- LIVE IMAGE INFORMATION -->
 
-        <div class="library-status-icon">
-          ◈
+        <div class="landing-stats">
+
+          <div class="landing-stat">
+            <span>AVAILABLE</span>
+            <strong id="landing-image-count">
+              Loading...
+            </strong>
+          </div>
+
+          <div class="landing-stat">
+            <span>MODE</span>
+            <strong>Visual Session</strong>
+          </div>
+
         </div>
 
-        <div class="library-status-text">
-          <strong id="landing-image-count">
-            Loading…
-          </strong>
 
-          <span id="landing-image-status">
-            Preparing image library
+        <button
+          id="enter-btn"
+          class="primary-btn"
+        >
+          ENTER SESSION
+        </button>
+
+
+        <div class="changelog">
+
+          <span>
+            <i></i>
+            v2.0
           </span>
+
+          <span>
+            <i></i>
+            Animated previews
+          </span>
+
+          <span>
+            <i></i>
+            New experience
+          </span>
+
         </div>
 
       </div>
 
-      <!-- Main CTA -->
-      <button
-        id="enter-session-btn"
-        class="primary-btn landing-btn"
-        type="button"
-        disabled
-      >
-        <span>Loading library…</span>
-        <span class="btn-arrow">→</span>
-      </button>
-
-      <!-- Changelog -->
-      <section class="changelog">
-
-        <div class="changelog-header">
-          <span class="eyebrow">LATEST UPDATE</span>
-          <span class="version">v2.0</span>
-        </div>
-
-        <div class="changelog-list">
-
-          <div class="change-item">
-            <span class="change-dot"></span>
-            <span>New cinematic landing screen</span>
-          </div>
-
-          <div class="change-item">
-            <span class="change-dot"></span>
-            <span>Live image library counter</span>
-          </div>
-
-          <div class="change-item">
-            <span class="change-dot"></span>
-            <span>Scrolling image preview walls</span>
-          </div>
-
-          <div class="change-item">
-            <span class="change-dot"></span>
-            <span>Improved image aspect handling</span>
-          </div>
-
-        </div>
-
-      </section>
-
-      <div class="landing-footer">
-        <span>IMAGE SESSION</span>
-        <span class="footer-separator">•</span>
-        <span>READY WHEN YOU ARE</span>
-      </div>
-
-    </main>
+    </div>
 
   </div>
 
 
-  <!-- =====================================================
+  <!-- ========================================================
        SETTINGS
-  ====================================================== -->
+       ======================================================== -->
 
-  <div id="settings-page" class="modal-screen is-hidden">
+  <div
+    id="settings-page"
+    class="modal-screen is-hidden"
+  >
 
     <div class="settings-card">
 
       <div class="modal-head">
 
         <div>
-          <span class="eyebrow">SETUP</span>
-          <h2>Session settings</h2>
+          <span class="eyebrow">
+            SETUP
+          </span>
+
+          <h2>
+            Session settings
+          </h2>
         </div>
 
         <button
-          id="close-settings-btn"
+          id="settings-close"
           class="icon-btn"
-          type="button"
           aria-label="Close settings"
         >
           ×
@@ -182,7 +1534,9 @@
 
           <span>
             <strong>Censored mode</strong>
-            <small>Apply a soft blur to the image.</small>
+            <small>
+              Apply a soft blur to the session images.
+            </small>
           </span>
 
           <input
@@ -218,7 +1572,10 @@
 
           <span>
             <strong>Image interval</strong>
-            <small>How often the image changes.</small>
+
+            <small>
+              How often the image changes.
+            </small>
           </span>
 
           <select id="speed-input">
@@ -235,10 +1592,7 @@
               4 sec
             </option>
 
-            <option
-              value="5000"
-              selected
-            >
+            <option value="5000" selected>
               5 sec
             </option>
 
@@ -259,7 +1613,10 @@
 
           <span>
             <strong>Difficulty</strong>
-            <small>Controls the session pace.</small>
+
+            <small>
+              Controls the session pace.
+            </small>
           </span>
 
           <select id="difficulty-select">
@@ -268,10 +1625,7 @@
               Easy
             </option>
 
-            <option
-              value="medium"
-              selected
-            >
+            <option value="medium" selected>
               Medium
             </option>
 
@@ -280,7 +1634,7 @@
             </option>
 
             <option value="extreme">
-              Extreme 🥵
+              Extreme
             </option>
 
           </select>
@@ -292,7 +1646,10 @@
 
           <span>
             <strong>Music</strong>
-            <small>Play background audio.</small>
+
+            <small>
+              Background atmosphere.
+            </small>
           </span>
 
           <input
@@ -307,7 +1664,10 @@
 
           <span>
             <strong>Metronome</strong>
-            <small>Visual and click feedback.</small>
+
+            <small>
+              Visual and click feedback.
+            </small>
           </span>
 
           <input
@@ -324,9 +1684,8 @@
       <button
         id="start-session-btn"
         class="primary-btn"
-        type="button"
       >
-        START
+        START SESSION
       </button>
 
     </div>
@@ -334,9 +1693,9 @@
   </div>
 
 
-  <!-- =====================================================
+  <!-- ========================================================
        SESSION
-  ====================================================== -->
+       ======================================================== -->
 
   <main
     id="session"
@@ -348,27 +1707,22 @@
       id="viewer"
     >
 
-      <!-- Image area -->
       <div class="image-wrap">
 
-        <div class="image-stage">
-
-          <img
-            id="main-image"
-            alt="Session image"
-            draggable="false"
-          >
-
-        </div>
+        <img
+          id="main-image"
+          alt="Session image"
+          draggable="false"
+        >
 
       </div>
 
 
-      <!-- Effects -->
       <div
         id="beat-flash"
         aria-hidden="true"
       ></div>
+
 
       <div
         class="image-shade"
@@ -377,6 +1731,7 @@
 
 
       <!-- TOP HUD -->
+
       <header class="hud top-hud">
 
         <div class="brand">
@@ -395,7 +1750,6 @@
           <button
             id="music-btn"
             class="hud-btn"
-            type="button"
             aria-label="Toggle music"
           >
             ♫
@@ -404,7 +1758,6 @@
           <button
             id="metro-btn"
             class="hud-btn is-active"
-            type="button"
             aria-label="Toggle metronome"
           >
             ◉
@@ -413,7 +1766,6 @@
           <button
             id="settings-btn"
             class="hud-btn"
-            type="button"
             aria-label="Open settings"
           >
             ☰
@@ -425,22 +1777,10 @@
 
 
       <!-- BOTTOM HUD -->
+
       <div class="hud bottom-hud">
 
         <div class="stats">
-
-          <div class="stat">
-
-            <span>
-              IMAGES
-            </span>
-
-            <strong id="image-count-display">
-              0
-            </strong>
-
-          </div>
-
 
           <div class="stat">
 
@@ -475,7 +1815,6 @@
           <button
             id="edge-btn"
             class="ghost-btn"
-            type="button"
           >
             Focus
           </button>
@@ -483,7 +1822,6 @@
           <button
             id="end-btn"
             class="ghost-btn"
-            type="button"
           >
             End
           </button>
@@ -493,7 +1831,6 @@
       </div>
 
 
-      <!-- Progress -->
       <div
         id="session-progress"
         class="progress"
@@ -513,7 +1850,1058 @@
   ></audio>
 
 
-  <script src="script.js"></script>
+  <script>
+    /* =========================================================
+       STATE
+       ========================================================= */
+
+    const state = {
+
+      images: [],
+
+      imageIndex: -1,
+
+      bpm: 60,
+
+      stage: 0,
+
+      isEdge: false,
+
+      config: {
+        censored: false,
+        pixel: 10,
+        speed: 5000,
+        difficulty: "medium"
+      },
+
+      audio: {
+        bg: new Audio("bg.mp3"),
+        click: document.getElementById("click-sound")
+      },
+
+      timers: {
+        beat: null,
+        ramp: null,
+        image: null
+      }
+
+    };
+
+
+    const diffLevels = {
+
+      easy: {
+        start: 50,
+        inc: 1
+      },
+
+      medium: {
+        start: 70,
+        inc: 2
+      },
+
+      hard: {
+        start: 100,
+        inc: 4
+      },
+
+      extreme: {
+        start: 140,
+        inc: 7
+      }
+
+    };
+
+
+    const $ = (id) =>
+      document.getElementById(id);
+
+
+    const viewer =
+      $("viewer");
+
+    const image =
+      $("main-image");
+
+
+    /* =========================================================
+       IMAGE LOADING
+       ========================================================= */
+
+    async function fetchContent() {
+
+      try {
+
+        const response =
+          await fetch(
+            "./images.json",
+            {
+              cache: "no-store"
+            }
+          );
+
+
+        if (!response.ok) {
+
+          throw new Error(
+            `HTTP ${response.status}`
+          );
+
+        }
+
+
+        const data =
+          await response.json();
+
+
+        state.images =
+          Array.isArray(data.images)
+            ? data.images
+                .filter(
+                  item =>
+                    typeof item === "string" &&
+                    item.trim().length > 0
+                )
+            : [];
+
+
+        if (!state.images.length) {
+
+          throw new Error(
+            "No images were found."
+          );
+
+        }
+
+
+        updateImageCount();
+
+        buildPreviewStreams();
+
+
+      } catch (error) {
+
+        console.error(
+          "Could not load images.json:",
+          error
+        );
+
+
+        $("landing-image-count").textContent =
+          "0 images";
+
+        $("preview-left").innerHTML = "";
+        $("preview-right").innerHTML = "";
+
+      }
+
+    }
+
+
+    /* =========================================================
+       IMAGE COUNT
+       ========================================================= */
+
+    function updateImageCount() {
+
+      const count =
+        state.images.length;
+
+
+      $("landing-image-count").textContent =
+        count === 1
+          ? "1 image"
+          : `${count} images`;
+
+    }
+
+
+    /* =========================================================
+       PREVIEW STREAMS
+       ========================================================= */
+
+    function createPreviewCard(src) {
+
+      const card =
+        document.createElement("div");
+
+      card.className =
+        "preview-card";
+
+
+      const img =
+        document.createElement("img");
+
+      img.src = src;
+
+      img.alt = "";
+
+      img.loading = "lazy";
+
+      img.decoding = "async";
+
+
+      /*
+        If one preview image fails,
+        remove it instead of leaving
+        an ugly broken-image icon.
+      */
+
+      img.onerror = () => {
+
+        card.remove();
+
+      };
+
+
+      card.appendChild(img);
+
+      return card;
+
+    }
+
+
+    function buildPreviewStreams() {
+
+      const left =
+        $("preview-left");
+
+      const right =
+        $("preview-right");
+
+
+      left.innerHTML = "";
+      right.innerHTML = "";
+
+
+      if (!state.images.length) {
+        return;
+      }
+
+
+      /*
+        Shuffle a copy so the landing page
+        does not always begin identically.
+      */
+
+      const shuffled =
+        [...state.images]
+          .sort(
+            () => Math.random() - .5
+          );
+
+
+      /*
+        We duplicate the sequence.
+
+        This is important because the CSS
+        animation moves 50%, creating a
+        seamless continuous loop.
+      */
+
+      const sequence =
+        [
+          ...shuffled,
+          ...shuffled
+        ];
+
+
+      sequence.forEach(
+        (src, index) => {
+
+          const card =
+            createPreviewCard(src);
+
+          /*
+            Slightly different visual rhythm.
+          */
+
+          if (index % 5 === 0) {
+            card.style.transform =
+              "translateX(7px)";
+          }
+
+          if (index % 7 === 0) {
+            card.style.transform =
+              "translateX(-5px)";
+          }
+
+
+          left.appendChild(card);
+
+        }
+      );
+
+
+      /*
+        Reverse order on right side
+        for a more dynamic composition.
+      */
+
+      [...sequence]
+        .reverse()
+        .forEach(
+          src => {
+
+            right.appendChild(
+              createPreviewCard(src)
+            );
+
+          }
+        );
+
+    }
+
+
+    /* =========================================================
+       SETTINGS
+       ========================================================= */
+
+    function showSettings() {
+
+      $("settings-page")
+        .classList
+        .remove("is-hidden");
+
+    }
+
+
+    function showLanding() {
+
+      $("settings-page")
+        .classList
+        .add("is-hidden");
+
+    }
+
+
+    /* =========================================================
+       IMAGE FILTER
+       ========================================================= */
+
+    function applyImageFilter() {
+
+      if (state.isEdge) {
+
+        image.style.filter =
+          "grayscale(1) brightness(.62) blur(1px)";
+
+        return;
+
+      }
+
+
+      if (state.config.censored) {
+
+        image.style.filter =
+          `blur(${state.config.pixel}px)`;
+
+      } else {
+
+        image.style.filter =
+          "none";
+
+      }
+
+    }
+
+
+    /* =========================================================
+       CYCLE IMAGE
+       ========================================================= */
+
+    function cycleImage() {
+
+      if (!state.images.length) {
+        return;
+      }
+
+
+      let next =
+        Math.floor(
+          Math.random() *
+          state.images.length
+        );
+
+
+      /*
+        Avoid showing the same image twice
+        when possible.
+      */
+
+      if (
+        state.images.length > 1 &&
+        next === state.imageIndex
+      ) {
+
+        next =
+          (next + 1) %
+          state.images.length;
+
+      }
+
+
+      state.imageIndex =
+        next;
+
+
+      image.classList.add(
+        "is-changing"
+      );
+
+
+      /*
+        Fade out slightly before switching.
+      */
+
+      image.style.opacity = "0";
+
+
+      setTimeout(() => {
+
+        image.src =
+          state.images[next];
+
+      }, 100);
+
+
+      image.onload = () => {
+
+        /*
+          The image itself controls its
+          own dimensions naturally.
+
+          max-width/max-height in CSS
+          prevents overflow.
+        */
+
+        requestAnimationFrame(() => {
+
+          image.style.opacity = "1";
+
+        });
+
+      };
+
+
+      image.onerror = () => {
+
+        console.error(
+          "Could not load image:",
+          state.images[next]
+        );
+
+        image.style.opacity = "0";
+
+      };
+
+
+      resetProgress();
+
+    }
+
+
+    /* =========================================================
+       PROGRESS
+       ========================================================= */
+
+    function resetProgress() {
+
+      const progress =
+        $("session-progress");
+
+
+      progress.style.transition =
+        "none";
+
+      progress.style.transform =
+        "scaleX(0)";
+
+
+      requestAnimationFrame(() => {
+
+        requestAnimationFrame(() => {
+
+          progress.style.transition =
+            `transform ${state.config.speed}ms linear`;
+
+          progress.style.transform =
+            "scaleX(1)";
+
+        });
+
+      });
+
+    }
+
+
+    /* =========================================================
+       BEAT
+       ========================================================= */
+
+    function runBeat() {
+
+      if (
+        !state.isEdge &&
+        $("metro-toggle").checked
+      ) {
+
+        const click =
+          state.audio.click;
+
+
+        if (click) {
+
+          click.currentTime = 0;
+
+          click.volume = .25;
+
+          click
+            .play()
+            .catch(() => {});
+
+        }
+
+
+        $("beat-flash").style.opacity =
+          ".09";
+
+
+        image.style.transform =
+          "scale(1.012)";
+
+
+        setTimeout(() => {
+
+          $("beat-flash").style.opacity =
+            "0";
+
+          image.style.transform =
+            "scale(1)";
+
+        }, 65);
+
+      }
+
+
+      $("bpm-display").textContent =
+        String(
+          Math.floor(state.bpm)
+        ).padStart(3, "0");
+
+
+      clearTimeout(
+        state.timers.beat
+      );
+
+
+      state.timers.beat =
+        setTimeout(
+          runBeat,
+          60000 /
+          Math.max(state.bpm, 1)
+        );
+
+    }
+
+
+    /* =========================================================
+       START SESSION
+       ========================================================= */
+
+    function startSession() {
+
+      state.config.censored =
+        $("censor-check").checked;
+
+
+      state.config.pixel =
+        Number(
+          $("pixel-slider").value
+        );
+
+
+      state.config.speed =
+        Number(
+          $("speed-input").value
+        );
+
+
+      state.config.difficulty =
+        $("difficulty-select").value;
+
+
+      const diff =
+        diffLevels[
+          state.config.difficulty
+        ];
+
+
+      state.bpm =
+        diff.start;
+
+
+      state.stage =
+        0;
+
+
+      state.isEdge =
+        false;
+
+
+      $("stage-display").textContent =
+        "0";
+
+
+      $("edge-btn")
+        .classList
+        .remove("is-active");
+
+
+      applyImageFilter();
+
+
+      $("settings-page")
+        .classList
+        .add("is-hidden");
+
+
+      $("landing-page")
+        .classList
+        .add("is-hidden");
+
+
+      $("session")
+        .classList
+        .remove("is-hidden");
+
+
+      /*
+        MUSIC
+      */
+
+      if ($("bg-toggle").checked) {
+
+        state.audio.bg.loop = true;
+
+        state.audio.bg.volume = .28;
+
+        state.audio.bg
+          .play()
+          .catch(() => {});
+
+        $("music-btn")
+          .classList
+          .add("is-active");
+
+      } else {
+
+        $("music-btn")
+          .classList
+          .remove("is-active");
+
+      }
+
+
+      /*
+        Clear old timers.
+      */
+
+      clearInterval(
+        state.timers.image
+      );
+
+      clearInterval(
+        state.timers.ramp
+      );
+
+      clearTimeout(
+        state.timers.beat
+      );
+
+
+      /*
+        Load image immediately.
+      */
+
+      if (state.images.length) {
+
+        cycleImage();
+
+        state.timers.image =
+          setInterval(
+            cycleImage,
+            state.config.speed
+          );
+
+      }
+
+
+      /*
+        Start beat.
+      */
+
+      runBeat();
+
+
+      /*
+        Increase difficulty every 10 seconds.
+      */
+
+      state.timers.ramp =
+        setInterval(() => {
+
+          if (!state.isEdge) {
+
+            state.bpm += diff.inc;
+
+
+            state.stage =
+              Math.floor(
+                (state.bpm - diff.start) /
+                15
+              );
+
+
+            $("stage-display").textContent =
+              String(state.stage);
+
+          }
+
+        }, 10000);
+
+
+      viewer.classList.add(
+        "clean"
+      );
+
+    }
+
+
+    /* =========================================================
+       MUSIC
+       ========================================================= */
+
+    function toggleMusic() {
+
+      const currentlyEnabled =
+        $("bg-toggle").checked;
+
+
+      $("bg-toggle").checked =
+        !currentlyEnabled;
+
+
+      if (!currentlyEnabled) {
+
+        state.audio.bg.loop = true;
+
+        state.audio.bg.volume = .28;
+
+        state.audio.bg
+          .play()
+          .catch(() => {});
+
+      } else {
+
+        state.audio.bg.pause();
+
+      }
+
+
+      $("music-btn")
+        .classList
+        .toggle(
+          "is-active",
+          !currentlyEnabled
+        );
+
+    }
+
+
+    /* =========================================================
+       METRONOME
+       ========================================================= */
+
+    function toggleMetronome() {
+
+      $("metro-toggle").checked =
+        !$("metro-toggle").checked;
+
+
+      $("metro-btn")
+        .classList
+        .toggle(
+          "is-active",
+          $("metro-toggle").checked
+        );
+
+    }
+
+
+    /* =========================================================
+       FOCUS
+       ========================================================= */
+
+    function toggleFocus() {
+
+      state.isEdge =
+        !state.isEdge;
+
+
+      $("edge-btn")
+        .classList
+        .toggle(
+          "is-active",
+          state.isEdge
+        );
+
+
+      applyImageFilter();
+
+    }
+
+
+    /* =========================================================
+       END SESSION
+       ========================================================= */
+
+    function endSession() {
+
+      clearInterval(
+        state.timers.image
+      );
+
+      clearInterval(
+        state.timers.ramp
+      );
+
+      clearTimeout(
+        state.timers.beat
+      );
+
+
+      state.audio.bg.pause();
+
+      state.audio.bg.currentTime = 0;
+
+
+      state.isEdge = false;
+
+      state.imageIndex = -1;
+
+
+      image.style.filter = "none";
+
+      image.style.transform = "scale(1)";
+
+      image.style.opacity = "1";
+
+
+      $("session")
+        .classList
+        .add("is-hidden");
+
+
+      $("settings-page")
+        .classList
+        .add("is-hidden");
+
+
+      $("landing-page")
+        .classList
+        .remove("is-hidden");
+
+
+      $("stage-display").textContent =
+        "0";
+
+
+      $("bpm-display").textContent =
+        "000";
+
+
+      $("edge-btn")
+        .classList
+        .remove("is-active");
+
+
+      /*
+        Rebuild the preview stream so
+        returning to the landing page
+        feels fresh.
+      */
+
+      buildPreviewStreams();
+
+    }
+
+
+    /* =========================================================
+       EVENT LISTENERS
+       ========================================================= */
+
+    $("enter-btn")
+      .addEventListener(
+        "click",
+        showSettings
+      );
+
+
+    $("settings-close")
+      .addEventListener(
+        "click",
+        showLanding
+      );
+
+
+    $("start-session-btn")
+      .addEventListener(
+        "click",
+        startSession
+      );
+
+
+    $("settings-btn")
+      .addEventListener(
+        "click",
+        showSettings
+      );
+
+
+    $("music-btn")
+      .addEventListener(
+        "click",
+        toggleMusic
+      );
+
+
+    $("metro-btn")
+      .addEventListener(
+        "click",
+        toggleMetronome
+      );
+
+
+    $("edge-btn")
+      .addEventListener(
+        "click",
+        toggleFocus
+      );
+
+
+    $("end-btn")
+      .addEventListener(
+        "click",
+        endSession
+      );
+
+
+    $("pixel-slider")
+      .addEventListener(
+        "input",
+        event => {
+
+          $("pixel-value").textContent =
+            event.target.value;
+
+
+          state.config.pixel =
+            Number(
+              event.target.value
+            );
+
+
+          applyImageFilter();
+
+        }
+      );
+
+
+    $("censor-check")
+      .addEventListener(
+        "change",
+        applyImageFilter
+      );
+
+
+    /* =========================================================
+       KEYBOARD
+       ========================================================= */
+
+    window.addEventListener(
+      "keydown",
+      event => {
+
+        if (
+          event.code === "Space" &&
+          !$("session")
+            .classList
+            .contains("is-hidden")
+        ) {
+
+          event.preventDefault();
+
+          cycleImage();
+
+        }
+
+
+        if (
+          event.key.toLowerCase() === "f" &&
+          !$("session")
+            .classList
+            .contains("is-hidden")
+        ) {
+
+          toggleFocus();
+
+        }
+
+
+        if (
+          event.key === "Escape" &&
+          !$("settings-page")
+            .classList
+            .contains("is-hidden")
+        ) {
+
+          showLanding();
+
+        }
+
+      }
+    );
+
+
+    /* =========================================================
+       PRELOAD + STARTUP
+       ========================================================= */
+
+    async function init() {
+
+      await fetchContent();
+
+
+      /*
+        Small startup delay makes the transition
+        feel deliberate instead of flashing.
+      */
+
+      setTimeout(() => {
+
+        $("loading")
+          .classList
+          .add("done");
+
+      }, 450);
+
+    }
+
+
+    init();
+
+  </script>
 
 </body>
 </html>
