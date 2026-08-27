@@ -1,8 +1,18 @@
+"use strict";
+
+
+/* =========================================================
+   STATE
+========================================================= */
+
 const state = {
+
   images: [],
+
   imageIndex: -1,
 
   bpm: 60,
+
   stage: 0,
 
   isEdge: false,
@@ -23,15 +33,19 @@ const state = {
     beat: null,
     ramp: null,
     image: null
-  }
+  },
+
+  libraryLoaded: false
+
 };
 
 
 /* =========================================================
    DIFFICULTY
-   ========================================================= */
+========================================================= */
 
 const diffLevels = {
+
   easy: {
     start: 50,
     inc: 1
@@ -51,211 +65,446 @@ const diffLevels = {
     start: 140,
     inc: 7
   }
+
 };
 
 
 /* =========================================================
-   HELPERS
-   ========================================================= */
+   DOM HELPERS
+========================================================= */
 
 const $ = (id) => document.getElementById(id);
+
+
+const landing = $("landing-page");
+const settings = $("settings-page");
+const session = $("session");
 
 const viewer = $("viewer");
 const image = $("main-image");
 
+const enterButton = $("enter-session-btn");
 
-/* =========================================================
-   WELCOME
-   ========================================================= */
+const landingCount = $("landing-image-count");
+const landingStatus = $("landing-image-status");
 
-async function loadWelcomeImages() {
-  try {
-    const response = await fetch("./images.json", {
-      cache: "no-store"
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}`);
-    }
-
-    const data = await response.json();
-
-    const images = Array.isArray(data.images)
-      ? data.images.filter(Boolean)
-      : [];
-
-    state.images = images;
-
-    $("welcome-image-count").textContent =
-      String(images.length).padStart(2, "0");
-
-    createFloatingImages(images);
-
-  } catch (error) {
-
-    console.error(
-      "Could not load welcome images:",
-      error
-    );
-
-    $("welcome-image-count").textContent = "—";
-  }
-}
+const sessionImageCount = $("image-count-display");
 
 
 /* =========================================================
-   FLOATING IMAGE BACKGROUND
-   ========================================================= */
-
-function createFloatingImages(images) {
-
-  const container = $("floating-images");
-
-  if (!container) return;
-
-  container.innerHTML = "";
-
-  if (!images.length) return;
-
-  /*
-    Pick up to 9 images.
-
-    We shuffle the array first so the background isn't
-    always showing the same first images.
-  */
-
-  const shuffled = [...images]
-    .sort(() => Math.random() - 0.5)
-    .slice(0, Math.min(9, images.length));
-
-
-  shuffled.forEach((src, index) => {
-
-    const img = document.createElement("img");
-
-    img.className = "floating-image";
-
-    img.src = src;
-
-    img.alt = "";
-
-    img.setAttribute(
-      "aria-hidden",
-      "true"
-    );
-
-    /*
-      Random-ish positions.
-
-      The CSS animation handles the actual movement.
-    */
-
-    const positions = [
-      [4, 12, -8],
-      [22, 68, 6],
-      [42, 8, 4],
-      [65, 20, -5],
-      [82, 65, 7],
-      [8, 78, 5],
-      [35, 80, -7],
-      [58, 65, 4],
-      [88, 12, -6]
-    ];
-
-    const position =
-      positions[index % positions.length];
-
-    img.style.left = `${position[0]}%`;
-    img.style.top = `${position[1]}%`;
-    img.style.transform =
-      `rotate(${position[2]}deg)`;
-
-    /*
-      Different animation timing makes them feel
-      independent rather than synchronized.
-    */
-
-    img.style.animationDuration =
-      `${16 + (index * 1.8)}s`;
-
-    img.style.animationDelay =
-      `${-(index * 2.1)}s`;
-
-    container.appendChild(img);
-  });
-}
-
-
-/* =========================================================
-   CHANGELOG
-   ========================================================= */
-
-function toggleChangelog() {
-
-  const panel = $("changelog-panel");
-
-  if (!panel) return;
-
-  panel.classList.toggle("is-open");
-}
-
-
-function closeChangelog() {
-
-  const panel = $("changelog-panel");
-
-  if (!panel) return;
-
-  panel.classList.remove("is-open");
-}
-
-
-$("changelog-btn").addEventListener(
-  "click",
-  toggleChangelog
-);
-
-$("changelog-close").addEventListener(
-  "click",
-  closeChangelog
-);
-
-
-/* =========================================================
-   NAVIGATION
-   ========================================================= */
+   LANDING / SETTINGS
+========================================================= */
 
 function showSettings() {
 
-  closeChangelog();
+  landing.classList.add("is-hidden");
 
-  $("landing-page")
-    .classList
-    .add("is-hidden");
+  settings.classList.remove("is-hidden");
 
-  $("settings-page")
-    .classList
-    .remove("is-hidden");
 }
 
 
 function showLanding() {
 
-  $("settings-page")
-    .classList
-    .add("is-hidden");
+  settings.classList.add("is-hidden");
 
-  $("landing-page")
-    .classList
-    .remove("is-hidden");
+  if (session.classList.contains("is-hidden")) {
+    landing.classList.remove("is-hidden");
+  }
 
-  createFloatingImages(state.images);
+}
+
+
+/* =========================================================
+   IMAGE COUNT
+========================================================= */
+
+function updateImageCount() {
+
+  const count = state.images.length;
+
+  landingCount.textContent =
+    `${count} ${count === 1 ? "image" : "images"}`;
+
+  sessionImageCount.textContent =
+    String(count);
+
+}
+
+
+/* =========================================================
+   LOAD IMAGE
+========================================================= */
+
+function preloadImage(src) {
+
+  return new Promise((resolve) => {
+
+    const img = new Image();
+
+    img.onload = () => {
+      resolve({
+        src,
+        ok: true
+      });
+    };
+
+    img.onerror = () => {
+      resolve({
+        src,
+        ok: false
+      });
+    };
+
+    img.src = src;
+
+  });
+
+}
+
+
+/* =========================================================
+   LOAD IMAGE LIBRARY
+========================================================= */
+
+async function fetchContent() {
+
+  landingStatus.textContent =
+    "Loading image library…";
+
+  landingCount.textContent =
+    "Loading…";
+
+  enterButton.disabled = true;
+
+  try {
+
+    /*
+      IMPORTANT:
+
+      images.json must be next to index.html.
+
+      Example:
+
+      /
+      ├── index.html
+      ├── style.css
+      ├── script.js
+      ├── images.json
+      ├── click.mp3
+      ├── bg.mp3
+      └── images/
+    */
+
+    const response = await fetch(
+      "./images.json",
+      {
+        cache: "no-store"
+      }
+    );
+
+
+    if (!response.ok) {
+
+      throw new Error(
+        `Could not load images.json (${response.status})`
+      );
+
+    }
+
+
+    const data =
+      await response.json();
+
+
+    if (!data || !Array.isArray(data.images)) {
+
+      throw new Error(
+        "images.json must contain an 'images' array."
+      );
+
+    }
+
+
+    /*
+      Clean the list.
+    */
+
+    const paths = data.images
+      .map((src) => String(src).trim())
+      .filter(Boolean);
+
+
+    if (!paths.length) {
+
+      throw new Error(
+        "images.json contains zero images."
+      );
+
+    }
+
+
+    /*
+      Remove duplicate paths.
+    */
+
+    const uniquePaths =
+      [...new Set(paths)];
+
+
+    /*
+      Preload everything.
+
+      Broken files are removed instead of making
+      the session randomly show broken images.
+    */
+
+    const results =
+      await Promise.all(
+        uniquePaths.map(preloadImage)
+      );
+
+
+    state.images =
+      results
+        .filter(result => result.ok)
+        .map(result => result.src);
+
+
+    if (!state.images.length) {
+
+      throw new Error(
+        "No valid images could be loaded."
+      );
+
+    }
+
+
+    state.libraryLoaded = true;
+
+
+    updateImageCount();
+
+    buildPreviewRails();
+
+
+    landingStatus.textContent =
+      "Image library ready";
+
+    enterButton.disabled = false;
+
+    enterButton.innerHTML = `
+      <span>Enter session</span>
+      <span class="btn-arrow">→</span>
+    `;
+
+
+    console.log(
+      `Loaded ${state.images.length} images.`
+    );
+
+
+  } catch (error) {
+
+    console.error(
+      "IMAGE LIBRARY ERROR:",
+      error
+    );
+
+
+    state.images = [];
+
+    state.libraryLoaded = false;
+
+
+    landingCount.textContent =
+      "0 images";
+
+
+    landingStatus.textContent =
+      "Could not load image library";
+
+
+    enterButton.disabled = true;
+
+    enterButton.innerHTML = `
+      <span>Image library unavailable</span>
+    `;
+
+  }
+
+}
+
+
+/* =========================================================
+   PREVIEW RAILS
+========================================================= */
+
+function createPreviewImage(src) {
+
+  const img =
+    document.createElement("img");
+
+
+  img.className =
+    "preview-image";
+
+
+  img.src =
+    src;
+
+
+  img.alt =
+    "";
+
+
+  img.loading =
+    "eager";
+
+
+  img.draggable =
+    false;
+
+
+  /*
+    If a preview image somehow fails after loading,
+    remove it rather than leaving a broken image icon.
+  */
+
+  img.addEventListener(
+    "error",
+    () => {
+      img.remove();
+    },
+    {
+      once: true
+    }
+  );
+
+
+  return img;
+
+}
+
+
+function buildPreviewRails() {
+
+  const left =
+    $("preview-left-track");
+
+  const right =
+    $("preview-right-track");
+
+
+  left.innerHTML = "";
+
+  right.innerHTML = "";
+
+
+  if (!state.images.length) {
+    return;
+  }
+
+
+  /*
+    We need enough images to create a seamless
+    scrolling wall.
+
+    Repeat the library several times.
+  */
+
+  const repeated = [];
+
+
+  const repeatCount =
+    Math.max(
+      4,
+      Math.ceil(
+        20 / state.images.length
+      )
+    );
+
+
+  for (
+    let r = 0;
+    r < repeatCount;
+    r++
+  ) {
+
+    for (
+      let i = 0;
+      i < state.images.length;
+      i++
+    ) {
+
+      repeated.push(
+        state.images[i]
+      );
+
+    }
+
+  }
+
+
+  /*
+    Left side
+  */
+
+  repeated.forEach((src) => {
+
+    left.appendChild(
+      createPreviewImage(src)
+    );
+
+  });
+
+
+  /*
+    Right side uses reversed images
+    so the two sides don't look identical.
+  */
+
+  [...repeated]
+    .reverse()
+    .forEach((src) => {
+
+      right.appendChild(
+        createPreviewImage(src)
+      );
+
+    });
+
+
+  /*
+    Duplicate the entire set once.
+
+    This makes the CSS animation loop smoothly.
+  */
+
+  const leftClone =
+    left.innerHTML;
+
+  const rightClone =
+    right.innerHTML;
+
+
+  left.insertAdjacentHTML(
+    "beforeend",
+    leftClone
+  );
+
+
+  right.insertAdjacentHTML(
+    "beforeend",
+    rightClone
+  );
+
 }
 
 
 /* =========================================================
    IMAGE FILTER
-   ========================================================= */
+========================================================= */
 
 function applyImageFilter() {
 
@@ -265,7 +514,9 @@ function applyImageFilter() {
       "grayscale(1) brightness(.62) blur(1px)";
 
     return;
+
   }
+
 
   if (state.config.censored) {
 
@@ -274,61 +525,17 @@ function applyImageFilter() {
 
   } else {
 
-    image.style.filter = "none";
+    image.style.filter =
+      "none";
+
   }
+
 }
 
 
 /* =========================================================
-   FETCH CONTENT
-   ========================================================= */
-
-async function fetchContent() {
-
-  try {
-
-    const response = await fetch(
-      "./images.json",
-      {
-        cache: "no-store"
-      }
-    );
-
-    if (!response.ok) {
-      throw new Error(
-        `HTTP ${response.status}`
-      );
-    }
-
-    const data = await response.json();
-
-    state.images =
-      Array.isArray(data.images)
-        ? data.images.filter(Boolean)
-        : [];
-
-    if (!state.images.length) {
-      throw new Error(
-        "images.json contains no images"
-      );
-    }
-
-  } catch (error) {
-
-    console.error(
-      "Could not load images.json:",
-      error
-    );
-
-    image.alt =
-      "No images found. Add image paths to images.json.";
-  }
-}
-
-
-/* =========================================================
-   CYCLE IMAGE
-   ========================================================= */
+   CHANGE MAIN IMAGE
+========================================================= */
 
 function cycleImage() {
 
@@ -336,11 +543,17 @@ function cycleImage() {
     return;
   }
 
+
   let next =
     Math.floor(
       Math.random() *
       state.images.length
     );
+
+
+  /*
+    Don't immediately show the same image.
+  */
 
   if (
     state.images.length > 1 &&
@@ -350,59 +563,94 @@ function cycleImage() {
     next =
       (next + 1) %
       state.images.length;
+
   }
 
-  state.imageIndex = next;
+
+  state.imageIndex =
+    next;
+
+
+  const nextSrc =
+    state.images[next];
 
 
   /*
-    Fade the image slightly during change.
+    Fade while image changes.
   */
 
-  image.style.opacity = "0";
+  image.classList.add(
+    "image-loading"
+  );
 
 
-  setTimeout(() => {
+  /*
+    Create a new Image first.
+
+    This prevents the visible image from
+    suddenly changing size while loading.
+  */
+
+  const loader =
+    new Image();
+
+
+  loader.onload = () => {
 
     image.src =
-      state.images[next];
+      nextSrc;
 
-    /*
-      Wait for image dimensions to be available.
+    image.classList.remove(
+      "image-loading"
+    );
 
-      This makes the browser calculate the correct
-      natural aspect ratio before displaying it.
-    */
+    image.classList.remove(
+      "image-error"
+    );
 
-    if (image.complete) {
+  };
 
-      image.style.opacity = "1";
 
-    } else {
+  loader.onerror = () => {
 
-      image.onload = () => {
-        image.style.opacity = "1";
-      };
-    }
+    console.warn(
+      "Failed to display image:",
+      nextSrc
+    );
 
-  }, 100);
+    image.classList.remove(
+      "image-loading"
+    );
+
+    image.classList.add(
+      "image-error"
+    );
+
+  };
+
+
+  loader.src =
+    nextSrc;
 
 
   resetProgress();
+
 }
 
 
 /* =========================================================
    PROGRESS
-   ========================================================= */
+========================================================= */
 
 function resetProgress() {
 
   const progress =
     $("session-progress");
 
+
   progress.style.transition =
     "none";
+
 
   progress.style.transform =
     "scaleX(0)";
@@ -413,25 +661,33 @@ function resetProgress() {
     progress.style.transition =
       `transform ${state.config.speed}ms linear`;
 
+
     progress.style.transform =
       "scaleX(1)";
+
   });
+
 }
 
 
 /* =========================================================
    BEAT
-   ========================================================= */
+========================================================= */
 
 function runBeat() {
 
+  const metro =
+    $("metro-toggle");
+
+
   if (
     !state.isEdge &&
-    $("metro-toggle").checked
+    metro.checked
   ) {
 
     const click =
       state.audio.click;
+
 
     if (click) {
 
@@ -439,7 +695,10 @@ function runBeat() {
 
       click.volume = .25;
 
-      click.play().catch(() => {});
+      click
+        .play()
+        .catch(() => {});
+
     }
 
 
@@ -448,19 +707,22 @@ function runBeat() {
 
 
     /*
-      IMPORTANT FIX:
+      IMPORTANT:
 
-      The old code used transform:scale()
-      on the actual image.
+      We DO NOT scale the image anymore.
 
-      That could make the image visually exceed
-      the containment area.
+      Scaling the image was causing the image
+      to exceed the safe viewport.
 
-      Instead, we use a tiny filter brightness pulse.
+      Instead we briefly brighten it.
     */
 
     image.style.filter =
-      getBeatFilter();
+      state.isEdge
+        ? "grayscale(1) brightness(.62) blur(1px)"
+        : state.config.censored
+          ? `blur(${state.config.pixel}px) brightness(1.06)`
+          : "brightness(1.06)";
 
 
     setTimeout(() => {
@@ -468,9 +730,11 @@ function runBeat() {
       $("beat-flash").style.opacity =
         "0";
 
+
       applyImageFilter();
 
     }, 65);
+
   }
 
 
@@ -489,56 +753,54 @@ function runBeat() {
     setTimeout(
       runBeat,
       60000 /
-      Math.max(state.bpm, 1)
+      Math.max(
+        state.bpm,
+        1
+      )
     );
-}
 
-
-/* =========================================================
-   BEAT FILTER
-   ========================================================= */
-
-function getBeatFilter() {
-
-  if (state.isEdge) {
-
-    return (
-      "grayscale(1) " +
-      "brightness(.68) " +
-      "blur(1px)"
-    );
-  }
-
-  if (state.config.censored) {
-
-    return (
-      `blur(${state.config.pixel}px) ` +
-      "brightness(1.08)"
-    );
-  }
-
-  return "brightness(1.08)";
 }
 
 
 /* =========================================================
    START SESSION
-   ========================================================= */
+========================================================= */
 
 function startSession() {
 
+  if (
+    !state.libraryLoaded ||
+    !state.images.length
+  ) {
+
+    console.warn(
+      "Cannot start session: image library is unavailable."
+    );
+
+    return;
+
+  }
+
+
+  /*
+    Save settings.
+  */
+
   state.config.censored =
     $("censor-check").checked;
+
 
   state.config.pixel =
     Number(
       $("pixel-slider").value
     );
 
+
   state.config.speed =
     Number(
       $("speed-input").value
     );
+
 
   state.config.difficulty =
     $("difficulty-select").value;
@@ -553,45 +815,66 @@ function startSession() {
   state.bpm =
     diff.start;
 
-  state.stage = 0;
 
-  state.isEdge = false;
+  state.stage =
+    0;
+
+
+  state.isEdge =
+    false;
+
+
+  state.imageIndex =
+    -1;
+
+
+  $("stage-display").textContent =
+    "0";
 
 
   applyImageFilter();
 
 
-  $("settings-page")
-    .classList
-    .add("is-hidden");
+  /*
+    Switch screens.
+  */
 
-  $("landing-page")
-    .classList
-    .add("is-hidden");
+  settings.classList.add(
+    "is-hidden"
+  );
 
-  $("session")
-    .classList
-    .remove("is-hidden");
+  landing.classList.add(
+    "is-hidden"
+  );
+
+  session.classList.remove(
+    "is-hidden"
+  );
 
 
   /*
-    Music
+    Music.
   */
 
-  if ($("bg-toggle").checked) {
+  if (
+    $("bg-toggle").checked
+  ) {
 
-    state.audio.bg.loop = true;
+    state.audio.bg.loop =
+      true;
 
-    state.audio.bg.volume = .28;
+    state.audio.bg.volume =
+      .28;
 
     state.audio.bg
       .play()
       .catch(() => {});
+
   }
 
 
   /*
-    Clear previous timers.
+    Clear old timers.
   */
 
   clearInterval(
@@ -608,31 +891,32 @@ function startSession() {
 
 
   /*
-    Load images then start.
+    Start first image.
   */
 
-  fetchContent().then(() => {
-
-    cycleImage();
-
-    state.timers.image =
-      setInterval(
-        cycleImage,
-        state.config.speed
-      );
-
-  });
+  cycleImage();
 
 
   /*
-    Beat
+    Automatically cycle images.
+  */
+
+  state.timers.image =
+    setInterval(
+      cycleImage,
+      state.config.speed
+    );
+
+
+  /*
+    Start metronome.
   */
 
   runBeat();
 
 
   /*
-    Difficulty ramp
+    Ramp difficulty.
   */
 
   state.timers.ramp =
@@ -640,34 +924,43 @@ function startSession() {
 
       if (!state.isEdge) {
 
-        state.bpm += diff.inc;
+        state.bpm +=
+          diff.inc;
+
 
         state.stage =
           Math.floor(
-            (state.bpm - diff.start) /
-            15
+            (
+              state.bpm -
+              diff.start
+            ) / 15
           );
 
-        $("stage-display")
-          .textContent =
+
+        $("stage-display").textContent =
           String(state.stage);
+
       }
 
     }, 10000);
 
 
-  viewer.classList.add("clean");
+  viewer.classList.add(
+    "clean"
+  );
+
 }
 
 
 /* =========================================================
    MUSIC
-   ========================================================= */
+========================================================= */
 
 function toggleMusic() {
 
   const enabled =
     $("bg-toggle").checked;
+
 
   $("bg-toggle").checked =
     !enabled;
@@ -675,17 +968,21 @@ function toggleMusic() {
 
   if (!enabled) {
 
-    state.audio.bg.loop = true;
+    state.audio.bg.loop =
+      true;
 
-    state.audio.bg.volume = .28;
+    state.audio.bg.volume =
+      .28;
 
     state.audio.bg
       .play()
       .catch(() => {});
 
+
   } else {
 
     state.audio.bg.pause();
+
   }
 
 
@@ -695,12 +992,13 @@ function toggleMusic() {
       "is-active",
       !enabled
     );
+
 }
 
 
 /* =========================================================
    METRONOME
-   ========================================================= */
+========================================================= */
 
 function toggleMetronome() {
 
@@ -714,12 +1012,13 @@ function toggleMetronome() {
       "is-active",
       $("metro-toggle").checked
     );
+
 }
 
 
 /* =========================================================
    FOCUS
-   ========================================================= */
+========================================================= */
 
 function toggleFocus() {
 
@@ -736,12 +1035,13 @@ function toggleFocus() {
 
 
   applyImageFilter();
+
 }
 
 
 /* =========================================================
    END SESSION
-   ========================================================= */
+========================================================= */
 
 function endSession() {
 
@@ -758,42 +1058,51 @@ function endSession() {
   );
 
 
+  state.timers.image =
+    null;
+
+  state.timers.ramp =
+    null;
+
+  state.timers.beat =
+    null;
+
+
   state.audio.bg.pause();
 
-  state.audio.bg.currentTime = 0;
+  state.audio.bg.currentTime =
+    0;
 
 
-  state.isEdge = false;
-
-  state.imageIndex = -1;
-
-
-  image.style.filter = "none";
-
-  image.style.opacity = "1";
+  state.isEdge =
+    false;
 
 
-  $("session")
-    .classList
-    .add("is-hidden");
+  state.imageIndex =
+    -1;
 
 
-  $("settings-page")
-    .classList
-    .add("is-hidden");
+  session.classList.add(
+    "is-hidden"
+  );
 
 
-  $("landing-page")
-    .classList
-    .remove("is-hidden");
+  settings.classList.add(
+    "is-hidden"
+  );
 
 
-  $("stage-display")
-    .textContent = "0";
+  landing.classList.remove(
+    "is-hidden"
+  );
 
 
-  $("bpm-display")
-    .textContent = "000";
+  $("stage-display").textContent =
+    "0";
+
+
+  $("bpm-display").textContent =
+    "000";
 
 
   $("edge-btn")
@@ -801,15 +1110,28 @@ function endSession() {
     .remove("is-active");
 
 
-  createFloatingImages(
-    state.images
-  );
+  applyImageFilter();
+
 }
 
 
 /* =========================================================
-   SETTINGS EVENTS
-   ========================================================= */
+   EVENTS
+========================================================= */
+
+$("enter-session-btn")
+  .addEventListener(
+    "click",
+    showSettings
+  );
+
+
+$("close-settings-btn")
+  .addEventListener(
+    "click",
+    showLanding
+  );
+
 
 $("start-session-btn")
   .addEventListener(
@@ -853,25 +1175,23 @@ $("end-btn")
   );
 
 
-/* =========================================================
-   BLUR SLIDER
-   ========================================================= */
-
 $("pixel-slider")
   .addEventListener(
     "input",
     (event) => {
 
-      $("pixel-value")
-        .textContent =
+      $("pixel-value").textContent =
         event.target.value;
+
 
       state.config.pixel =
         Number(
           event.target.value
         );
 
+
       applyImageFilter();
+
     }
   );
 
@@ -885,7 +1205,7 @@ $("censor-check")
 
 /* =========================================================
    KEYBOARD
-   ========================================================= */
+========================================================= */
 
 window.addEventListener(
   "keydown",
@@ -893,36 +1213,39 @@ window.addEventListener(
 
     if (
       event.code === "Space" &&
-      !$("session")
-        .classList
-        .contains("is-hidden")
+      !session.classList.contains(
+        "is-hidden"
+      )
     ) {
 
       event.preventDefault();
 
       cycleImage();
+
     }
 
 
     if (
       event.key.toLowerCase() === "f" &&
-      !$("session")
-        .classList
-        .contains("is-hidden")
+      !session.classList.contains(
+        "is-hidden"
+      )
     ) {
 
       toggleFocus();
+
     }
 
 
     if (
       event.key === "Escape" &&
-      !$("settings-page")
-        .classList
-        .contains("is-hidden")
+      !settings.classList.contains(
+        "is-hidden"
+      )
     ) {
 
       showLanding();
+
     }
 
   }
@@ -931,6 +1254,13 @@ window.addEventListener(
 
 /* =========================================================
    INITIALIZE
-   ========================================================= */
+========================================================= */
 
-loadWelcomeImages();
+document.addEventListener(
+  "DOMContentLoaded",
+  () => {
+
+    fetchContent();
+
+  }
+);
